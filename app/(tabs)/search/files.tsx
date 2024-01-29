@@ -12,17 +12,24 @@ import { styles } from "./files.styles";
 import { documents } from "../../../utils/files";
 import { Item } from "../../../utils/files";
 
-import { useNavigation } from "@react-navigation/native";
-
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../store";
 // import { screen } from "../../../utils";
 
 // import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
+import { useNavigation, useLocalSearchParams } from "expo-router";
 
 export default function FileScreen() {
-  const router = useRouter();
+  const { item }: any = useLocalSearchParams();
 
+  const router = useRouter();
+  const assetList =
+    useSelector((state: RootState) => state.home.assetList) ?? [];
+  const currentAsset: any = assetList.find(
+    (asset: any) => asset.idFirebaseAsset === item
+  );
   // const {
   //   route: {
   //     params: { Item },

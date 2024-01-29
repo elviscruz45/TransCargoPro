@@ -56,7 +56,7 @@ export default function _layout() {
         name="camera"
         options={{
           title: "foto",
-          headerShown: false,
+          headerShown: true,
 
           // presentation: "modal",
           // headerRight: () => (

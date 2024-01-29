@@ -65,7 +65,6 @@ export function InfoUser(props: any) {
 
     const storage = getStorage();
     const storageRef = ref(storage, `avatar/${session}`);
-
     uploadBytesResumable(storageRef, blob).then((snapshot) => {
       updatePhotoUrl(snapshot.metadata.fullPath);
     });
@@ -76,7 +75,6 @@ export function InfoUser(props: any) {
     const imageRef = ref(storage, imagePath);
 
     const imageUrl = await getDownloadURL(imageRef);
-    console.log("imageUrl", imageUrl);
 
     const auth = getAuth();
     if (auth.currentUser) {
@@ -87,9 +85,11 @@ export function InfoUser(props: any) {
     ///setting data to firebase
     const docRef = doc(collection(db, "users"), session ?? "");
     // Update a property of the document
+
     await updateDoc(docRef, {
       photoURL: imageUrl,
     });
+
     dispatch(update_photoURL(imageUrl));
   };
 
@@ -121,8 +121,9 @@ export function InfoUser(props: any) {
           rounded
           containerStyle={styles.avatar}
           source={
-            { uri: photoUrl as string } ??
-            require("../../assets/pictures/docsIcon.png")
+            photoUrl
+              ? { uri: photoUrl }
+              : require("../../assets/pictures/docsIcon.png")
           }
         >
           <Avatar.Accessory

@@ -109,6 +109,7 @@ export default function TabLayout() {
           //   return b.LastEventPosted - a.LastEventPosted;
           // });
           dispatch(setAssetList(lista));
+          console.log("asset sdfsdf");
 
           // setData(lista.slice(0, 50));
           // props.updateAITServicesDATA(lista);

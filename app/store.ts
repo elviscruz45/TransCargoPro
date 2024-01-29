@@ -3,6 +3,7 @@ import counterReducer from "../slices/counter";
 import userIdSlice from "../slices/auth";
 import publishSlice from "../slices/publish";
 import homeSlice from "../slices/home";
+import searchSlice from "../slices/search";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     userId: userIdSlice,
     publish: publishSlice,
     home: homeSlice,
+    search: searchSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

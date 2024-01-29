@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Image as ImageExpo } from "expo-image";
 import { styles } from "./moreDetail.styles";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useLocalSearchParams } from "expo-router";
 // import { screen } from "../../../utils";
 import { connect } from "react-redux";
 // import { saveActualEquipment } from "../../../actions/post";
@@ -18,11 +18,18 @@ import { connect } from "react-redux";
 // import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Item } from "../../../utils/moreInformation";
 import { useRouter } from "expo-router";
-
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../store";
 const windowWidth = Dimensions.get("window").width;
 export default function MoreDetail() {
-  const router = useRouter();
+  const { item }: any = useLocalSearchParams();
 
+  const router = useRouter();
+  const assetList =
+    useSelector((state: RootState) => state.home.assetList) ?? [];
+  const currentAsset: any = assetList.find(
+    (asset: any) => asset.idFirebaseAsset === item
+  );
   //Algorithm to render the bar status
   const formattedAmount = new Intl.NumberFormat("en-US", {
     style: "decimal",

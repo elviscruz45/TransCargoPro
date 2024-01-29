@@ -28,10 +28,7 @@ export default function Publish() {
   // go to another screen to take a photo before put data to the form
   const camera = (item: any) => {
     console.log("holaa");
-    router.push({
-      pathname: "/publish/camera",
-      params: { item: item },
-    });
+
     if (!asset) {
       Toast.show({
         type: "error",
@@ -45,7 +42,7 @@ export default function Publish() {
     }
     router.push({
       pathname: "/publish/camera",
-      // params: { item: item },
+      params: { item: item },
     });
     setAsset(null);
     // setAIT(null);
@@ -137,19 +134,16 @@ export default function Publish() {
         lightTheme={true}
         inputContainerStyle={{ backgroundColor: "white" }}
       />
-      {asset?.image ? (
-        <ImageExpo
-          source={{ uri: asset?.image }}
-          style={styles.roundImage}
-          cachePolicy={"memory-disk"}
-        />
-      ) : (
-        <ImageExpo
-          source={require("../../../assets/assetpics/carIcon.jpg")}
-          style={styles.roundImage}
-          cachePolicy={"memory-disk"}
-        />
-      )}
+      <ImageExpo
+        source={
+          asset?.photoServiceURL
+            ? { uri: asset?.photoServiceURL }
+            : require("../../../assets/assetpics/carIcon.jpg")
+        }
+        style={styles.roundImage}
+        cachePolicy={"memory-disk"}
+      />
+
       {/* {asset! && <Text style={styles.name}>"Escoger Activo"</Text>} */}
       {asset ? (
         <Text style={styles.name}>{asset.placa}</Text>
@@ -207,19 +201,16 @@ export default function Publish() {
               style={{ backgroundColor: "white" }} // Add backgroundColor here
             >
               <View style={styles.equipments}>
-                {item?.image ? (
-                  <ImageExpo
-                    source={{ uri: item?.image }}
-                    style={styles.image}
-                    cachePolicy={"memory-disk"}
-                  />
-                ) : (
-                  <ImageExpo
-                    source={require("../../../assets/assetpics/carIcon.jpg")}
-                    style={styles.image}
-                    cachePolicy={"memory-disk"}
-                  />
-                )}
+                <ImageExpo
+                  source={
+                    item?.photoServiceURL
+                      ? { uri: item?.photoServiceURL }
+                      : require("../../../assets/assetpics/carIcon.jpg")
+                  }
+                  style={styles.image}
+                  cachePolicy={"memory-disk"}
+                />
+
                 <View>
                   <Text style={styles.name2}>
                     {item.NombreArea

@@ -23,7 +23,7 @@ export default function SearchAsset() {
     console.log(item);
     router.push({
       pathname: "/search/item",
-      params: { item: item.tag },
+      params: { item: item.idFirebaseAsset },
     });
 
     // navigation.navigate(screen.search.tab, {
@@ -56,19 +56,17 @@ export default function SearchAsset() {
               style={{ backgroundColor: "white" }} // Add backgroundColor here
             >
               <View style={styles.equipments}>
-                {item?.image ? (
+                {
                   <ImageExpo
-                    source={{ uri: item?.image }}
+                    source={
+                      item?.photoServiceURL
+                        ? { uri: item?.photoServiceURL }
+                        : require("../../../assets/assetpics/carIcon.jpg")
+                    }
                     style={styles.image}
                     cachePolicy={"memory-disk"}
                   />
-                ) : (
-                  <ImageExpo
-                    source={require("../../../assets/assetpics/carIcon.jpg")}
-                    style={styles.image}
-                    cachePolicy={"memory-disk"}
-                  />
-                )}
+                }
 
                 <View>
                   <Text style={styles.name2}>
