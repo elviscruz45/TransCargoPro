@@ -31,10 +31,11 @@ export default function SearchAsset() {
     //   params: { Item: idServiciosAIT },
     // });
   };
+  //hola
+
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       {/* {console.log("SearchItem")} */}
-
       <FlatList
         data={globalAssetList}
         ListHeaderComponent={
