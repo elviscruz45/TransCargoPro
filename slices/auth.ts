@@ -13,6 +13,7 @@ export interface userId {
   descripcion: string | null;
   displayName: string | null;
   userType: string | null;
+  assetAssigned: string | null;
 }
 
 const initialState: userId = {
@@ -25,6 +26,7 @@ const initialState: userId = {
   descripcion: "",
   displayName: "",
   userType: "",
+  assetAssigned: "",
 };
 
 export const userIdSlice = createSlice({
@@ -65,6 +67,10 @@ export const userIdSlice = createSlice({
       // Perform sign-in logic here
       state.userType = action.payload;
     },
+    updateAssetAssigned: (state, action: PayloadAction<string>) => {
+      // Perform sign-in logic here
+      state.assetAssigned = action.payload;
+    },
   },
 });
 
@@ -79,6 +85,7 @@ export const {
   updateDescripcion,
   updateDisplayName,
   updateUserType,
+  updateAssetAssigned,
 } = userIdSlice.actions;
 
 export default userIdSlice.reducer;

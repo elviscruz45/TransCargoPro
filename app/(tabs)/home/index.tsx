@@ -35,15 +35,16 @@ import { Header } from "../../../components/home/header/header";
 // import Toast from "react-native-toast-message";
 
 export default function HomeScreen() {
-  const eventList = useSelector((state: RootState) => state.home.eventList);
+  const eventList: any = useSelector(
+    (state: RootState) => state.home.eventList
+  );
   const dispatch = useDispatch();
-  console.log("eventListtt", eventList);
-
+  console.log("eventList", eventList);
   return (
     <>
       <View style={styles.container}>
         <FlatList
-          data={postLists}
+          data={eventList}
           scrollEnabled={true}
           ListHeaderComponent={<Header />}
           showsVerticalScrollIndicator={false}
@@ -65,34 +66,36 @@ export default function HomeScreen() {
                       // onPress={() => goToServiceInfo(item)}
                     >
                       <ImageExpo
-                        source={item.imagen}
+                        source={{ uri: item.photoAssetURL }}
                         style={styles.roundImage}
                         cachePolicy={"memory-disk"}
                       />
 
-                      <Text style={styles.NombreServicio}>{item.asset}</Text>
+                      <Text style={styles.NombreServicio}>
+                        {item.nombreAsset}
+                      </Text>
                     </TouchableOpacity>
 
                     <ImageExpo
-                      source={item.perfil}
+                      source={{ uri: item.photoProfileURL }}
                       style={styles.roundImage}
                       cachePolicy={"memory-disk"}
                     />
                     <Text style={styles.NombrePerfilCorto}>
-                      {item.conductor}
+                      {item.nombrePerfil}
                     </Text>
                   </View>
                 </View>
                 <View style={[styles.row, styles.center]}>
                   <Text style={{ marginLeft: 5, color: "#5B5B5B" }}>
                     {"Tipo:  "}
-                    {item.reporte}
+                    {item.tipoEvento}
                   </Text>
                 </View>
                 <View style={[styles.row, styles.center]}>
                   <Text style={{ marginLeft: 5, color: "#5B5B5B" }}>
                     {"Empresa:  "}
-                    {item.empresa}
+                    {item.companyName}
                   </Text>
                 </View>
                 {/* <View style={[styles.row, styles.center]}>
@@ -105,7 +108,7 @@ export default function HomeScreen() {
               </View> */}
                 <Text style={{ marginLeft: 5, color: "#5B5B5B" }}>
                   {"Fecha:  "}
-                  {item.fecha}
+                  {item.fechaPostFormato}
                 </Text>
                 <Text></Text>
                 <View style={styles.equipments}>
@@ -113,20 +116,17 @@ export default function HomeScreen() {
                   // onPress={() => commentPost(item)}
                   >
                     <ImageExpo
-                      source={item.imagen}
+                      source={{ uri: item.photoEvent }}
                       style={styles.postPhoto}
                       cachePolicy={"memory-disk"}
                     />
                   </TouchableOpacity>
 
                   <View>
-                    <Text style={styles.textAreaTitle}>
-                      {"Evento: "}
-                      {item.titulo}
-                    </Text>
+                    <Text style={styles.textAreaTitle}>{item.tipoEvento}</Text>
                     <Text></Text>
                     <Text style={styles.textAreaComment} selectable={true}>
-                      {item.descripcion}
+                      {item.comentarios}
                     </Text>
                   </View>
                 </View>

@@ -10,6 +10,7 @@ export function initialValues() {
     companyName: "",
     userType: "",
     uid: "",
+    assetAssigned: "",
   };
 }
 

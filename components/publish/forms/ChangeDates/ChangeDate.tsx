@@ -44,9 +44,7 @@ export function ChangeDate({ onClose, formik, formikValue }: Event) {
     }
   };
 
-  useEffect(() => {
-    console.log("holaaaaaaaIOS2222");
-  }, []);
+  useEffect(() => {}, []);
 
   const showDatepicker = () => {
     showMode("date");

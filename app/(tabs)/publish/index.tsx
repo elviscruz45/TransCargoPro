@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import EditScreenInfo from '../../components/EditScreenInfo';
 // import { Text, View } from '../../components/Themed';
 import { Text, View, Image } from "react-native";
@@ -20,15 +20,28 @@ import { takePhoto } from "../../../slices/publish";
 export default function Publish() {
   const router = useRouter();
   const [asset, setAsset] = useState<any>(null);
+  const [searchText, setSearchText] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
   //global state management for the user_uid
   const globalAsset = useSelector((state: RootState) => state.publish.asset);
   const dispatch = useDispatch();
-  const assetLists =
+  const assetLists: any =
     useSelector((state: RootState) => state.home.assetList) ?? [];
+
+  useEffect(() => {
+    if (searchText === "") {
+      setSearchResults(assetLists?.slice(0, 100));
+    } else {
+      const result = assetLists?.filter((item: any) => {
+        const re = new RegExp(searchText, "ig");
+        return re.test(item.nombre) || re.test(item.placa);
+      });
+      setSearchResults(result.slice(0, 50));
+    }
+  }, [searchText]);
+
   // go to another screen to take a photo before put data to the form
   const camera = (item: any) => {
-    console.log("holaa");
-
     if (!asset) {
       Toast.show({
         type: "error",
@@ -129,8 +142,8 @@ export default function Publish() {
       {/* {console.log("SearchItem")} */}
       <SearchBar
         placeholder="Buscar AIT o nombre del servicio"
-        // value={searchText}
-        // onChangeText={(text) => setSearchText(text)}
+        value={searchText}
+        onChangeText={(text) => setSearchText(text)}
         lightTheme={true}
         inputContainerStyle={{ backgroundColor: "white" }}
       />
@@ -191,7 +204,7 @@ export default function Publish() {
         </TouchableOpacity>
       </View>
       <FlatList
-        data={assetLists}
+        data={searchResults}
         showsVerticalScrollIndicator={false}
         scrollEnabled={true}
         renderItem={({ item, index }) => {

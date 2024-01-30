@@ -133,7 +133,7 @@ export default function TabLayout() {
       async function fetchData() {
         let queryRef;
         queryRef = query(
-          collection(db, "events")
+          collection(db, "Events")
           // limit(10),
           // where("visibilidad", "==", "Todos"),
           // orderBy("createdAt", "desc")
@@ -144,10 +144,10 @@ export default function TabLayout() {
           ItemFirebase.forEach((doc) => {
             lista.push(doc.data());
           });
-          //order the list by date
-          // lista.sort((a:any, b:any) => {
-          //   return b.createdAt - a.createdAt;
-          // });
+          // order the list by date
+          lista.sort((a: any, b: any) => {
+            return b.createdAt - a.createdAt;
+          });
           console.log("event", lista);
           dispatch(setEventList(lista));
           // setPosts(lista);

@@ -7,7 +7,6 @@ export function initialValues() {
     nombre: "",
     dni: "",
     //informacion activo
-    activo: "",
     placa: "",
     fechaFabricacion: "",
     categoriaVehiculo: "",
@@ -16,7 +15,6 @@ export function initialValues() {
     modelo: "",
     kilometraje: "",
     numeroChasis: "",
-
     //datos Vehiculo
     claseVehiculo: "",
     potencia: "",
@@ -50,7 +48,6 @@ export function initialValues() {
     soat: new Date(2024, 0, 1),
     polizaResponsabilidadCivil: new Date(2024, 0, 1),
     //Datos Empresa
-    NombreArea: "",
     FichaRUC: new Date(2024, 0, 1),
     SeguroCarga: new Date(2024, 0, 1),
     //Datos Adicionales para Firebase

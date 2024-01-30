@@ -25,7 +25,6 @@ export function Header() {
 
   const selectAsset = (item: any) => {
     //create a to go to the screen called item
-    console.log(item);
     router.push({
       pathname: "/search/item",
       params: { item: item.idFirebaseAsset },

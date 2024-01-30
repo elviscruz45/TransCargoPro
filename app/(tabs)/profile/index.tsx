@@ -48,7 +48,6 @@ export default function Profile(props: any) {
   const logout = async () => {
     const auth = getAuth();
     await signOut(auth);
-    console.log("logout", auth);
     // props.update_firebaseUserUid("");
     dispatch(CloseApp());
     // props.update_firebaseProfile("");

@@ -23,6 +23,7 @@ import {
   updateDescripcion,
   updateDisplayName,
   updateUserType,
+  updateAssetAssigned,
 } from "../../../slices/auth";
 
 export function NameForm(props: any) {
@@ -56,10 +57,12 @@ export function NameForm(props: any) {
           "";
         newData.userType = userTypeList[4].value;
         newData.uid = currentLoginUser?.uid ?? "";
+        newData.assetAssigned = "";
 
         ///setting data to firebase
         const docRef = doc(collection(db, "users"), newData.uid);
         await setDoc(docRef, newData);
+
         //updating the global state
         dispatch(update_photoURL(newData.photoURL));
         dispatch(updateEmail(newData.email));
@@ -68,6 +71,7 @@ export function NameForm(props: any) {
         dispatch(updateDescripcion(newData.descripcion));
         dispatch(updateDisplayName(newData.displayNameform));
         dispatch(updateUserType(newData.userType));
+        dispatch(updateAssetAssigned(newData.assetAssigned));
 
         // props.update_firebaseProfile(newData);
         // props.update_firebaseUserName(newData.displayNameform);
@@ -76,7 +80,6 @@ export function NameForm(props: any) {
           position: "bottom",
           text1: "Nombre y apellidos actualizados",
         });
-        console.log("finnn", currentLoginUser);
       } catch (error) {
         Toast.show({
           type: "error",

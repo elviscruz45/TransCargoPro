@@ -78,7 +78,6 @@ export function LoginForm(props: any) {
           // });
         }
       } catch (error) {
-        console.log(error);
         Toast.show({
           type: "error",
           // position: "top",

@@ -50,7 +50,6 @@ export default function CameraScreen() {
       // props.savePhotoUri(resizedPhoto.uri);
       dispatch(takePhoto(resizedPhoto.uri));
       // navigation.navigate(screen.post.form);
-      console.log("camera");
       router.push({
         pathname: "/publish/events",
         // params: { item: item },

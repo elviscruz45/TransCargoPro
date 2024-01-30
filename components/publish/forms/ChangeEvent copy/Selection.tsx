@@ -33,7 +33,6 @@ export const ChangeEvent: React.FC<Event> = ({
 
   function saveProperty(itemValue: any) {
     // setText(itemValue);
-    console.log("itemValue", itemValue);
     onClose();
   }
 

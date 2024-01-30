@@ -126,7 +126,6 @@ export default function Item(props: any) {
         {
           text: "Aceptar",
           onPress: async () => {
-            console.log("unodostres");
             changeAvatar();
           },
         },
@@ -134,7 +133,6 @@ export default function Item(props: any) {
       { cancelable: false }
     );
   };
-  console.log(currentAsset?.photoServiceURL);
 
   return (
     <>

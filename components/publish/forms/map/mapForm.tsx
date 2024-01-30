@@ -34,7 +34,6 @@ export const MapForm: React.FC<MapFormProps> = ({
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
-      console.log("location", location);
     })();
   }, []);
 
@@ -46,7 +45,6 @@ export const MapForm: React.FC<MapFormProps> = ({
   }
 
   const onChangeLocation = () => {
-    console.log("onChangeLocation", location);
     formik.setFieldValue("ubicacion", location);
     onClose();
   };

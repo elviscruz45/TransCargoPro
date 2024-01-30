@@ -147,7 +147,6 @@ export default function Asset(props: any) {
         newData.companyName =
           capitalizeFirstLetter(props.email?.match(regex)?.[1] ?? "Anonimo") ||
           "Anonimo";
-        console.log("assetSubmitiion", formValue);
 
         // //Uploading data to Firebase and adding the ID firestore
         // const docRef = await addDoc(collection(db, "Asset"), newData);

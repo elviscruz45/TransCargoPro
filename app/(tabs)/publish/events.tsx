@@ -51,7 +51,6 @@ export default function events(props: any) {
     useState<React.ReactElement | null>(null);
   const tires: any =
     useSelector((state: RootState) => state.publish.tires) ?? [];
-  console.log(tires);
   const router = useRouter();
   const email = useSelector((state: RootState) => state.userId.email) ?? "";
   const photoURL =
@@ -63,7 +62,8 @@ export default function events(props: any) {
 
   const userType =
     useSelector((state: RootState) => state.userId.userType) ?? "";
-
+  const asset: any =
+    useSelector((state: RootState) => state.publish.asset) ?? "";
   //global state management for the user_uid
   const dispatch = useDispatch();
   const currentAsset: CurrentAsset | any = useSelector(
@@ -72,7 +72,6 @@ export default function events(props: any) {
   const photoUri =
     useSelector((state: RootState) => state.publish.cameraUri) ?? "";
 
-  console.log("hola como estas", tires);
   // const name = useSelector((state: RootState) => state.userId.displayName);
   // const user_email = useSelector((state: RootState) => state.userId.email);
   // const companyName = useSelector(
@@ -91,7 +90,6 @@ export default function events(props: any) {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
       formik.setFieldValue("ubicacion", location);
-      console.log("location", location);
     })();
   }, []);
   function capitalizeFirstLetter(str: string) {
@@ -128,9 +126,17 @@ export default function events(props: any) {
         const minute = date.getMinutes();
         const formattedDate = `${day} ${month} ${year}  ${hour}:${minute} Hrs`;
 
+        //Nombre
+        newData.nombreAsset = asset?.nombre;
+
         newData.fechaPostFormato = formattedDate;
-        //Photo of the service
-        newData.photoServiceURL = photoURL;
+        //Photo Events
+        newData.photoEvent = photoUri;
+        newData.userType = userType;
+        //Photo of the Asset
+        newData.photoAssetURL = asset?.photoServiceURL;
+        //Photo of the profile
+        newData.photoProfileURL = photoURL;
         //Data about information profile and company
         newData.emailPerfil = email || "Anonimo";
         newData.llanta = tires || [];
@@ -143,7 +149,6 @@ export default function events(props: any) {
         //Uploading data to Firebase and adding the ID firestore
         const docRef = doc(collection(db, "Events"));
         newData.idEventFirebase = docRef.id;
-        console.log("newData", newData);
 
         await setDoc(docRef, newData);
         Toast.show({
@@ -151,8 +156,9 @@ export default function events(props: any) {
           position: "bottom",
           text1: "Se ha subido correctamente",
         });
+        router.back();
         router.push({
-          pathname: "/publish/",
+          pathname: "/home/",
           // params: { item: item },
         });
       } catch (error) {
@@ -352,7 +358,6 @@ export default function events(props: any) {
 
                 name: "car-tire-alert",
                 onPress: () => {
-                  console.log("llanta");
                   router.push({
                     pathname: "/(modals)/tires",
                     params: { item: currentAsset?.idFirebaseAsset },

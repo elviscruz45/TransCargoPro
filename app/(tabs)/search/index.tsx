@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { useState, useEffect } from "react";
 
 // import EditScreenInfo from '../../components/EditScreenInfo';
 // import { Text, View } from '../../components/Themed';
@@ -11,8 +12,13 @@ import { assetLists } from "../../../utils/assetList";
 import { useRouter } from "expo-router";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
+
 export default function SearchAsset() {
   const router = useRouter();
+  const [data, setData] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
   //global state management for the user_uid
   const globalAssetList: any = useSelector(
     (state: RootState) => state.home.assetList
@@ -20,7 +26,6 @@ export default function SearchAsset() {
   //this method is used to go to a screen to see the status of the item
   const selectAsset = (item: any) => {
     //create a to go to the screen called item
-    console.log(item);
     router.push({
       pathname: "/search/item",
       params: { item: item.idFirebaseAsset },
@@ -33,16 +38,28 @@ export default function SearchAsset() {
   };
   //hola
 
+  useEffect(() => {
+    if (searchText === "") {
+      setSearchResults(globalAssetList?.slice(0, 100));
+    } else {
+      const result = globalAssetList?.filter((item: any) => {
+        const re = new RegExp(searchText, "ig");
+        return re.test(item.nombre) || re.test(item.placa);
+      });
+      setSearchResults(result.slice(0, 50));
+    }
+  }, [searchText]);
+
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>
       {/* {console.log("SearchItem")} */}
       <FlatList
-        data={globalAssetList}
+        data={searchResults}
         ListHeaderComponent={
           <SearchBar
             placeholder="Buscar AIT o nombre del servicio"
-            // value={searchText}
-            // onChangeText={(text) => setSearchText(text)}
+            value={searchText}
+            onChangeText={(text) => setSearchText(text)}
             lightTheme={true}
             inputContainerStyle={{ backgroundColor: "white" }}
           />

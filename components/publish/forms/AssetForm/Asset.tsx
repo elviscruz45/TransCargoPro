@@ -102,21 +102,21 @@ export function AssetForm({ formik, setActivo, setNombre }: any) {
           }}
           // errorMessage={formik.errors.NombreServicio}
         />
+        <Input
+          value={formik.values.nombre.toString()}
+          label="Nombre de Activo/Area/Personal"
+          // placeholder="Area del Servicio a Realizar"
+          // editable={false}
+          onChangeText={(text) => {
+            formik.setFieldValue("nombre", text);
+            setNombre(text);
+          }}
+          // errorMessage={formik.errors.AreaServicio}
+        />
         {tipoActivo === "Conductor o Personal" && (
           <>
             <Text style={styles.subtitleForm}>Informacion Personal</Text>
 
-            <Input
-              value={formik.values.nombre.toString()}
-              label="Nombre del Personal"
-              // placeholder="Area del Servicio a Realizar"
-              // editable={false}
-              onChangeText={(text) => {
-                formik.setFieldValue("nombre", text);
-                setNombre(text);
-              }}
-              // errorMessage={formik.errors.AreaServicio}
-            />
             <Input
               value={formik.values.dni.toString()}
               label="DNI"
@@ -131,16 +131,6 @@ export function AssetForm({ formik, setActivo, setNombre }: any) {
         {tipoActivo === "Equipo o Activo" && (
           <>
             <Text style={styles.subtitleForm}>Informacion Activo</Text>
-
-            <Input
-              value={formik.values.activo.toString()}
-              label="Nombre del Activo/Area"
-              // errorMessage={formik.errors.AreaServicio}
-              onChangeText={(text) => {
-                formik.setFieldValue("activo", text);
-                setActivo(text);
-              }}
-            />
 
             <Input
               label="Placa Vehicular Vehicular"
@@ -589,17 +579,6 @@ export function AssetForm({ formik, setActivo, setNombre }: any) {
 
         {tipoActivo === "Area Empresa" && (
           <>
-            <Input
-              value={formik.values.NombreArea.toString()}
-              label="Nombre del Area"
-              // placeholder="Area del Servicio a Realizar"
-              // editable={false}
-              onChangeText={(text) => {
-                formik.setFieldValue("NombreArea", text);
-                setNombre(text);
-              }}
-              // errorMessage={formik.errors.AreaServicio}
-            />
             <Text style={styles.subtitleForm}>Documentos de la Empresa</Text>
 
             <Input
