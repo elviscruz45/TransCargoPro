@@ -30,6 +30,7 @@ import { db } from "../../../utils/firebase";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
 import type { CurrentAsset } from "../../../types/publish";
+import { uploadTires } from "../../../slices/publish";
 // interface CurrentAsset {
 //   image?: string;
 //   // add other properties as needed
@@ -48,22 +49,39 @@ export default function events(props: any) {
   );
   const [renderComponent, setRenderComponent] =
     useState<React.ReactElement | null>(null);
+  const tires: any =
+    useSelector((state: RootState) => state.publish.tires) ?? [];
+  console.log(tires);
   const router = useRouter();
+  const email = useSelector((state: RootState) => state.userId.email) ?? "";
+  const photoURL =
+    useSelector((state: RootState) => state.userId.photoURL) ?? "";
+  const displayName =
+    useSelector((state: RootState) => state.userId.displayName) ?? "";
+  const companyName =
+    useSelector((state: RootState) => state.userId.companyName) ?? "";
+
+  const userType =
+    useSelector((state: RootState) => state.userId.userType) ?? "";
+
   //global state management for the user_uid
   const dispatch = useDispatch();
   const currentAsset: CurrentAsset | any = useSelector(
     (state: RootState) => state.publish.asset
   );
-  const currentUriPicture =
-    useSelector((state: RootState) => state.publish.pictureEvent) ?? "";
+  const photoUri =
+    useSelector((state: RootState) => state.publish.cameraUri) ?? "";
+
+  console.log("hola como estas", tires);
   // const name = useSelector((state: RootState) => state.userId.displayName);
   // const user_email = useSelector((state: RootState) => state.userId.email);
   // const companyName = useSelector(
   //   (state: RootState) => state.userId.companyName
   // );
-  console.log("currentAsset", currentAsset);
   useEffect(() => {
     (async () => {
+      dispatch(uploadTires([]));
+
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         setErrorMsg("Permission to access location was denied");
@@ -72,6 +90,7 @@ export default function events(props: any) {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+      formik.setFieldValue("ubicacion", location);
       console.log("location", location);
     })();
   }, []);
@@ -108,30 +127,33 @@ export default function events(props: any) {
         const hour = date.getHours();
         const minute = date.getMinutes();
         const formattedDate = `${day} ${month} ${year}  ${hour}:${minute} Hrs`;
+
         newData.fechaPostFormato = formattedDate;
         //Photo of the service
-        newData.photoServiceURL = "";
-
+        newData.photoServiceURL = photoURL;
         //Data about information profile and company
-        newData.emailPerfil = props.email || "Anonimo";
-        newData.nombrePerfil = props.firebase_user_name || "Anonimo";
+        newData.emailPerfil = email || "Anonimo";
+        newData.llanta = tires || [];
 
+        newData.nombrePerfil = displayName || "Anonimo";
+        newData.idFirebaseAsset = currentAsset?.idFirebaseAsset;
         //Data about the company belong this event
         const regex = /@(.+?)\./i;
-        newData.companyName =
-          capitalizeFirstLetter(props.email?.match(regex)?.[1] ?? "Anonimo") ||
-          "Anonimo";
-        console.log("assetSubmitiion", formValue);
-
+        newData.companyName = companyName || "Anonimo";
         //Uploading data to Firebase and adding the ID firestore
         const docRef = doc(collection(db, "Events"));
-        newData.idFirebaseAsset = docRef.id;
-        await setDoc(docRef, newData);
+        newData.idEventFirebase = docRef.id;
+        console.log("newData", newData);
 
+        await setDoc(docRef, newData);
         Toast.show({
           type: "success",
           position: "bottom",
           text1: "Se ha subido correctamente",
+        });
+        router.push({
+          pathname: "/publish/",
+          // params: { item: item },
         });
       } catch (error) {
         Toast.show({
@@ -140,8 +162,6 @@ export default function events(props: any) {
           text1: "Error al tratar de subir estos datos",
         });
       }
-
-      // console.log("values", values);
     },
   });
   const selectComponent = (key: string) => {
@@ -191,24 +211,24 @@ export default function events(props: any) {
       <Text style={styles.name}>Freightliner 02</Text>
 
       <View style={styles.equipments}>
-        {currentAsset?.image ? (
-          <ImageExpo
-            source={{ uri: currentAsset?.image }}
-            style={styles.roundImage}
-            cachePolicy={"memory-disk"}
-          />
-        ) : (
-          <ImageExpo
-            source={require("../../../assets/assetpics/carIcon.jpg")}
-            style={styles.roundImage}
-            cachePolicy={"memory-disk"}
-          />
-        )}
+        <ImageExpo
+          source={
+            currentAsset
+              ? { uri: currentAsset.photoServiceURL }
+              : require("../../../assets/assetpics/carIcon.jpg")
+          }
+          style={styles.roundImage}
+          cachePolicy={"memory-disk"}
+        />
       </View>
 
       <View style={styles.equipments}>
         <ImageExpo
-          source={{ uri: currentUriPicture }}
+          source={
+            photoUri
+              ? { uri: photoUri }
+              : require("../../../assets/assetpics/carIcon.jpg")
+          }
           style={styles.postPhoto}
         />
         <View>
@@ -218,6 +238,7 @@ export default function events(props: any) {
             // placeholder="Titulo del Evento"
             multiline={true}
             editable={true}
+            errorMessage={formik.errors.tipoEvento}
             rightIcon={{
               type: "material-community",
               color: "#c2c2c2",
@@ -246,6 +267,9 @@ export default function events(props: any) {
             value={formik.values.kilometraje}
             label="Kilometraje (Km)"
             keyboardType="numeric"
+            onChangeText={(text) => {
+              formik.setFieldValue("kilometraje", text);
+            }}
             // placeholder="Etapa del Evento"
             // editable={true}
 
@@ -254,27 +278,33 @@ export default function events(props: any) {
           {true && (
             <Input
               // value={true ? `${avance} %` : null}
-              value={JSON.stringify(location) ?? "Desconocida"}
+              value={JSON.stringify(formik.values.ubicacion)}
               label="Ubicacion"
+              // onChangeText={(text) => {
+              //   formik.setFieldValue("ubicacion", JSON.stringify(location));
+              // }}
               // placeholder="Avance del ejecucion"
               editable={false}
-              // errorMessage={formik.errors.porcentajeAvance}
+              multiline={true}
+              errorMessage={formik.errors.ubicacion}
               rightIcon={{
                 type: "material-community",
                 name: "map-marker-radius",
                 color: "#c2c2c2",
                 onPress: () => selectComponent("ubicacion"),
-
-                // onPress: () => selectComponent("porcentajeAvance"),
               }}
             />
           )}
 
           {true && (
             <Input
-              label="Ingreso Combustible (Gls.)"
+              label=" Combustible (Gls.)"
               value={formik.values.combustible.toString()}
-              editable={false}
+              editable={true}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                formik.setFieldValue("combustible", text);
+              }}
               // errorMessage={formik.errors.visibilidad}
             />
           )}
@@ -285,24 +315,35 @@ export default function events(props: any) {
               label="Total Combustible (S/.)"
               // placeholder="Visibilidad del evento"
               editable={true}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                formik.setFieldValue("totalCombustible", text);
+              }}
               // errorMessage={formik.errors.visibilidad}
             />
           )}
           {true && (
             <Input
               value={formik.values.facturacionFlete.toString()}
-              label="Facturacion Flete (S/.)"
+              label="Costo Flete (S/.)"
               // placeholder="Visibilidad del evento"
               editable={true}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                formik.setFieldValue("facturacionFlete", text);
+              }}
               // errorMessage={formik.errors.visibilidad}
             />
           )}
           {true && (
             <Input
-              value={formik.values.llanta.toString()}
+              value={
+                tires.length !== 0 ? "Formulario llenado" : "Formulario vacio"
+              }
               // placeholder="Aprobador"
+
               label="Llanta"
-              editable={true}
+              editable={false}
               multiline={true}
               // errorMessage={formik.errors.aprobacion}
               rightIcon={{
@@ -314,7 +355,7 @@ export default function events(props: any) {
                   console.log("llanta");
                   router.push({
                     pathname: "/(modals)/tires",
-                    // params: { item: item },
+                    params: { item: currentAsset?.idFirebaseAsset },
                   });
                   // selectComponent("llanta")
                 },
@@ -330,6 +371,10 @@ export default function events(props: any) {
               label="Costo Total Repuesto (S/.)"
               // placeholder="Visibilidad del evento"
               editable={true}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                formik.setFieldValue("costoTotalRepuesto", text);
+              }}
               // errorMessage={formik.errors.visibilidad}
             />
           )}
@@ -340,6 +385,9 @@ export default function events(props: any) {
               label="Repuesto"
               // placeholder="Visibilidad del evento"
               editable={true}
+              onChangeText={(text) => {
+                formik.setFieldValue("repuesto", text);
+              }}
               // errorMessage={formik.errors.visibilidad}
             />
           )}
@@ -349,16 +397,22 @@ export default function events(props: any) {
               label="Costo Mantenimiento (S/.)"
               // placeholder="Visibilidad del evento"
               editable={true}
+              keyboardType="numeric"
+              onChangeText={(text) => {
+                formik.setFieldValue("costoMantenimiento", text);
+              }}
               // errorMessage={formik.errors.visibilidad}
             />
           )}
         </View>
       </View>
-
+      <Modal show={showModal} close={onCloseOpenModal}>
+        {renderComponent}
+      </Modal>
       <Button
         title="Agregar Evento"
         buttonStyle={styles.addInformation}
-        // onPress={formik.handleSubmit}
+        onPress={() => formik.handleSubmit()}
         loading={formik.isSubmitting}
       />
     </KeyboardAwareScrollView>

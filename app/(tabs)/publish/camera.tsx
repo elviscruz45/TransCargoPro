@@ -9,13 +9,15 @@ import { Camera, CameraType } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImageManipulator from "expo-image-manipulator";
 import { useRouter } from "expo-router";
+import { useDispatch } from "react-redux";
+import { takePhoto } from "../../../slices/publish";
 
 export default function CameraScreen() {
   const [type, setType] = useState(CameraType.back);
   const cameraRef = useRef<Camera>(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const router = useRouter();
-
+  const dispatch = useDispatch();
   if (!permission) {
     // Camera permissions are still loading
     return <View />;
@@ -46,6 +48,7 @@ export default function CameraScreen() {
         }
       );
       // props.savePhotoUri(resizedPhoto.uri);
+      dispatch(takePhoto(resizedPhoto.uri));
       // navigation.navigate(screen.post.form);
       console.log("camera");
       router.push({

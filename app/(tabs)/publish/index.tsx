@@ -15,7 +15,7 @@ import { pickAsset } from "../../../slices/publish";
 import Toast from "react-native-toast-message";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
-import { pickPictureEvent } from "../../../slices/publish";
+import { takePhoto } from "../../../slices/publish";
 
 export default function Publish() {
   const router = useRouter();
@@ -115,7 +115,7 @@ export default function Publish() {
       );
       // props.savePhotoUri(resizedPhoto.uri);
       // navigation.navigate(screen.post.form);
-      dispatch(pickPictureEvent(resizedPhoto.uri));
+      dispatch(takePhoto(resizedPhoto.uri));
       setAsset(null);
 
       router.push({

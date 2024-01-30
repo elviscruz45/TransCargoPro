@@ -35,8 +35,9 @@ import { Header } from "../../../components/home/header/header";
 // import Toast from "react-native-toast-message";
 
 export default function HomeScreen() {
-  const count = useSelector((state: RootState) => state.counter.value);
+  const eventList = useSelector((state: RootState) => state.home.eventList);
   const dispatch = useDispatch();
+  console.log("eventListtt", eventList);
 
   return (
     <>

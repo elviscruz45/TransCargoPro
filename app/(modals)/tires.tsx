@@ -4,10 +4,14 @@ import { Image as ImageExpo } from "expo-image";
 import { styles } from "./tires.styles";
 import { Avatar, Button, Input } from "@rneui/themed";
 import { useRouter } from "expo-router";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../store";
+import { uploadTires } from "../../slices/publish";
 
 export default function tires() {
-  const router = useRouter();
+  const dispatch = useDispatch();
 
+  const router = useRouter();
   const [tires, setTires] = useState([
     { value: 1, selected: false },
     { value: 2, selected: false },
@@ -34,7 +38,7 @@ export default function tires() {
   ]);
 
   const onPressAceptar = (item: any) => {
-    console.log("casa");
+    dispatch(uploadTires(tires));
     router.back();
   };
 

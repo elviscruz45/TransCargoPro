@@ -62,7 +62,7 @@ export function LoginForm(props: any) {
           // props.update_firebaseProfile(docSnap.data());
           Toast.show({
             type: "success",
-            position: "bottom",
+            position: "top",
             text1: "Bienvenido",
           });
         } else {
