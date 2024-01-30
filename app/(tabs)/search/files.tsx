@@ -89,7 +89,7 @@ export default function FileScreen() {
       <Text></Text>
       <TouchableOpacity onPress={() => goToAddDocsForm()}>
         <ImageExpo
-          source={require("../../../assets/pictures/excel2.png")}
+          source={require("../../../assets/pictures/addFilesIcon.png")}
           style={styles.image3}
           cachePolicy={"memory-disk"}
         />

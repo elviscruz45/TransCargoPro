@@ -4,14 +4,20 @@ import { postLists } from "../../../utils/postList";
 import { styles } from "./History.styles";
 import { Image as ImageExpo } from "expo-image";
 import { SearchBar, Icon } from "@rneui/themed";
-
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../../app/store";
 export function History() {
+  const eventList: any = useSelector(
+    (state: RootState) => state.home.eventList
+  );
+  const dispatch = useDispatch();
+
   return (
     <>
       <FlatList
         scrollEnabled={false}
         // contentContainerStyle={props.listViewContainerStyle}
-        data={postLists}
+        data={eventList}
         renderItem={({ item, index }) => {
           // const timestampData = item.createdAt;
           // const timestampInMilliseconds =
@@ -35,8 +41,12 @@ export function History() {
             return months[monthNumber];
           }
           // Create the formatted string "dd MMM" (e.g., "28 Ago")
-          const day = item.createdAt.getDate();
-          const month = getAbbreviatedMonthName(item.createdAt.getMonth());
+          const day = 12;
+          // const day = item.createdAt.getDate();
+
+          const month = getAbbreviatedMonthName(2);
+
+          // console.log(item.createdAt?.toDate().getMonth());
           const formattedDate = `${day} ${month}`;
 
           //get the company name from the userEmail
@@ -78,11 +88,15 @@ export function History() {
                 <TouchableOpacity
                 // onPress={() => comentPost(item)}
                 >
-                  <Text style={styles.titledetails}>{item.reporte}</Text>
+                  <Text style={styles.titledetails}>{item.tipoEvento}</Text>
 
                   <View style={styles.row}>
                     <ImageExpo
-                      source={require("../../../assets/pictures/report1.png")}
+                      source={
+                        item.photoEvent
+                          ? { uri: item.photoEvent }
+                          : require("../../../assets/pictures/report1.png")
+                      }
                       cachePolicy={"memory-disk"}
                       style={{
                         width: 50,
@@ -91,7 +105,7 @@ export function History() {
                         marginLeft: 5,
                       }}
                     />
-                    <Text style={styles.textdetail}>{item.descripcion}</Text>
+                    <Text style={styles.textdetail}>{item.comentarios}</Text>
                   </View>
                   <Text></Text>
                   {/* <View style={styles.rowavanceNombre}>
@@ -102,17 +116,17 @@ export function History() {
                   <View style={styles.rowavanceNombre}>
                     <Text style={styles.avanceNombre}> Fecha:</Text>
 
-                    <Text style={styles.detail}> {item.fecha}</Text>
+                    <Text style={styles.detail}> {item.fechaPostFormato}</Text>
                   </View>
                   <View style={styles.rowavanceNombre}>
                     <Text style={styles.avanceNombre}> Autor: </Text>
-                    <Text style={styles.detail}> {item.conductor}</Text>
+                    <Text style={styles.detail}> {item.nombrePerfil}</Text>
                   </View>
-                  {true && (
+                  {/* {true && (
                     <View style={styles.rowavanceNombre}>
                       <Icon type="material-community" name="paperclip" />
                     </View>
-                  )}
+                  )} */}
                 </TouchableOpacity>
               </View>
             </View>
