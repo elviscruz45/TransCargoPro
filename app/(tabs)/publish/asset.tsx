@@ -9,7 +9,8 @@ import { initialValues, validationSchema } from "./asset.data";
 // import { useNavigation } from "@react-navigation/native";
 // import { screen } from "../../../utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../store";
 // import { saveActualPostFirebase } from "../../../actions/post";
 // import { db } from "../../../utils";
 import { db } from "../../../utils/firebase";
@@ -38,6 +39,13 @@ export default function Asset(props: any) {
   const [activo, setActivo] = useState();
   const [nombre, setNombre] = useState();
   const router = useRouter();
+  const email = useSelector((state: RootState) => state.userId.email) ?? "";
+  const photoURL =
+    useSelector((state: RootState) => state.userId.photoURL) ?? "";
+  const displayName =
+    useSelector((state: RootState) => state.userId.displayName) ?? "";
+  const companyName =
+    useSelector((state: RootState) => state.userId.companyName) ?? "";
 
   //fetching data from firebase to retrieve all users
 
@@ -139,14 +147,10 @@ export default function Asset(props: any) {
         //Photo of the service
         newData.photoServiceURL = "";
         //Data about information profile and company
-        newData.emailPerfil = props.email || "Anonimo";
-        newData.nombrePerfil = props.firebase_user_name || "Anonimo";
+        newData.emailPerfil = email || "Anonimo";
+        newData.nombrePerfil = displayName || "Anonimo";
 
-        //Data about the company belong this event
-        const regex = /@(.+?)\./i;
-        newData.companyName =
-          capitalizeFirstLetter(props.email?.match(regex)?.[1] ?? "Anonimo") ||
-          "Anonimo";
+        newData.companyName = companyName || "Anonimo";
 
         // //Uploading data to Firebase and adding the ID firestore
         // const docRef = await addDoc(collection(db, "Asset"), newData);

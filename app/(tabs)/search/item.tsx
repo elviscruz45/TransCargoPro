@@ -165,25 +165,38 @@ export default function Item(props: any) {
           </View>
           <Text> </Text>
           <View style={{ marginLeft: 0 }}>
-            <Text style={styles.name}>Freighliner 01</Text>
-            <Text style={styles.info}>{"Tag:"} FreightLiner02</Text>
-            <Text style={styles.info}>{"Tipo:"} sdfd</Text>
-            <Text style={styles.info}>{"Kilometraje:"} 123,423 Km</Text>
+            <Text style={styles.name}>{currentAsset.nombre}</Text>
             <Text style={styles.info}>
-              {"Kilometraje cambio aceite:"} 123,423 Km
+              {"Placa:"} {currentAsset.placa}
             </Text>
-            <Text style={styles.info}>{"Gasto Combustible:"} 123,423 Km</Text>
+            {/* <Text style={styles.info}>{"Tipo:"} sdfd</Text> */}
             <Text style={styles.info}>
-              {"Rendimiento Combustible:"} 123,423 Km
+              {"Kilometraje:"}
+              {currentAsset.kilometraje} {"Km"}
+            </Text>
+            <Text style={styles.info}>
+              {"Cambio aceite Prox:"}
+              {currentAsset.cambioAceiteProx}
+              {"Km"}
+            </Text>
+            <Text style={styles.info}>
+              {"Gasto Combustible:"} {currentAsset.gastoCombustible} {"Gls"}
+            </Text>
+            <Text style={styles.info}>
+              {"Rendimiento Combustible:"} {currentAsset.redimientoCombustible}
+              {"Gls/Km"}
             </Text>
 
             <Text style={styles.info}>
-              {"Facturacion a la fecha:"} 123,423 Km
+              {"Facturacion a la fecha:"} {"S/."}
+              {currentAsset.facturacionFleteYTD}
             </Text>
             <Text style={styles.info}>
-              {"Servicios a la fecha:"} 123,423 Km
+              {"Servicios a la fecha:"} {currentAsset.cantidadServiciosYTD}
             </Text>
-            <Text style={styles.info}>{"Gastos a la fecha:"} 123,423 Km</Text>
+            <Text style={styles.info}>
+              {"Gastos a la fecha:"} {"S/."} {currentAsset.gastosTotalYTD}
+            </Text>
           </View>
         </View>
         <Text></Text>

@@ -27,6 +27,13 @@ export function initialValues() {
     color: "",
     carroceria: "",
     ejes: "",
+    //activo Calculos
+    gastoCombustible: "",
+    cambioAceiteProx: "",
+    redimientoCombustible: "",
+    facturacionFleteYTD: "",
+    cantidadServiciosYTD: "",
+    gastosTotalYTD: "",
     //Documentacion Personal
     licenciaA3: new Date(2024, 0, 1),
     licenciaA4: new Date(2024, 0, 1),

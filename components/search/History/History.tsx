@@ -19,10 +19,6 @@ export function History() {
         // contentContainerStyle={props.listViewContainerStyle}
         data={eventList}
         renderItem={({ item, index }) => {
-          // const timestampData = item.createdAt;
-          // const timestampInMilliseconds =
-          //   timestampData.seconds * 1000 + timestampData.nanoseconds / 1000000;
-          // const date = new Date(timestampInMilliseconds); // Function to get the abbreviated month name
           function getAbbreviatedMonthName(monthNumber: number) {
             const months = [
               "Ene",
@@ -40,13 +36,14 @@ export function History() {
             ];
             return months[monthNumber];
           }
-          // Create the formatted string "dd MMM" (e.g., "28 Ago")
-          const day = 12;
-          // const day = item.createdAt.getDate();
 
-          const month = getAbbreviatedMonthName(2);
-
-          // console.log(item.createdAt?.toDate().getMonth());
+          const firebaseTimestamp = item.createdAt;
+          const milliseconds =
+            firebaseTimestamp.seconds * 1000 +
+            firebaseTimestamp.nanoseconds / 1000000;
+          const date = new Date(milliseconds);
+          const day = date.getDate();
+          const month = getAbbreviatedMonthName(date.getMonth());
           const formattedDate = `${day} ${month}`;
 
           //get the company name from the userEmail
@@ -132,7 +129,7 @@ export function History() {
             </View>
           );
         }}
-        keyExtractor={(item: any) => item.id}
+        keyExtractor={(item: any) => item.idEventFirebase}
       />
     </>
   );

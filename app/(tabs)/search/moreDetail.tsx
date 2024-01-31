@@ -31,12 +31,12 @@ export default function MoreDetail() {
     (asset: any) => asset.idFirebaseAsset === item
   );
   //Algorithm to render the bar status
-  const formattedAmount = new Intl.NumberFormat("en-US", {
+  const formattedfacturacionFleteYTD = new Intl.NumberFormat("en-US", {
     style: "decimal",
     useGrouping: true,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(Item.Monto);
+  }).format(currentAsset.facturacionFleteYTD);
   ///function to change the format of FechaFin from ServiciosAIT firebase collection
   const formatDate = (item: any) => {
     if (!item) return;
@@ -119,7 +119,7 @@ export default function MoreDetail() {
         <TouchableOpacity onPress={() => goToEditAITScreen(Item)}>
           <View style={{ marginRight: "2%" }}>
             <ImageExpo
-              source={require("../../../assets/assetpics/freight01.jpeg")}
+              source={require("../../../assets/pictures/deleteIcon.png")}
               style={styles.editIcon}
             />
           </View>
@@ -166,44 +166,20 @@ export default function MoreDetail() {
         </View> */}
         <View style={[styles.row, styles.center]}>
           <Text style={styles.info}>{"Nombre de la Empresa:  "}</Text>
-          <Text style={styles.info2}>{Item.companyName}</Text>
+          <Text style={styles.info2}>{currentAsset.companyName}</Text>
         </View>
         <View style={[styles.row, styles.center]}>
           <Text style={styles.info}>{"Creado por:  "}</Text>
-          <Text style={styles.info2}>{Item.emailPerfil}</Text>
+          <Text style={styles.info2}>{currentAsset.emailPerfil}</Text>
         </View>
         <View style={[styles.row, styles.center]}>
           <Text style={styles.info}>{"Monto de Facturacion:  "}</Text>
           <Text style={styles.info2}>
-            {formattedAmount} {Item.Moneda}
+            {"S/. "}
+            {/* {currentAsset.facturacionFleteYTD} */}
+            {formattedfacturacionFleteYTD}
           </Text>
         </View>
-        <View style={[styles.row, styles.center]}>
-          <Text style={styles.info}>{"Fecha de Asignacion:  "}</Text>
-          <Text style={styles.info2}>
-            {formatDate(Item?.FechaInicio?.seconds * 1000) ||
-              formatDate(Item?.createdAt?.seconds * 1000)}
-          </Text>
-        </View>
-        <View style={[styles.row, styles.center]}>
-          <Text style={styles.info}>{"Fecha de Fin Propuesto:  "}</Text>
-          <Text style={styles.info2}>15 Julio</Text>
-        </View>
-        <View style={[styles.row, styles.center]}>
-          <Text style={styles.info}>{"Horas Hombre Cotizadas:  "}</Text>
-          <Text style={styles.info2}>
-            {Item.HorasHombre}
-            {" HH"}
-          </Text>
-        </View>
-        <View style={[styles.row, styles.center]}>
-          <Text style={styles.info}>{"Avance Ejecucion Real:  "}</Text>
-          <Text style={styles.info2}>
-            {Item.AvanceEjecucion}
-            {" %"}
-          </Text>
-        </View>
-        {BarProgress(Item.AvanceEjecucion)}
 
         {/* <View style={[styles.row, styles.center]}>
           <Text style={styles.info}>{"Avance Ejecucion Proyectado:  "}</Text>
@@ -216,9 +192,6 @@ export default function MoreDetail() {
         {/* {BarProgress(AvanceProyected)} */}
         <Text></Text>
 
-        <Text style={styles.info}>
-          {"Administrador de Contratos Cerro Verde:  "}
-        </Text>
         {/* {ResposableList(UsuarioAdministrador)}
         <Text style={styles.info}>{"Planeamiento Cerro Verde:  "}</Text>
         {ResposableList(UsuarioPlaneamiento)}
