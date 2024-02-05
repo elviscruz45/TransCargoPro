@@ -23,6 +23,7 @@ import { Image as ImageExpo } from "expo-image";
 // import { ProfileDateScreen } from "../../../components/Profile/ProfileDateScreen/ProfileDateScreen";
 // import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { ProfileDate } from "../../../components/profile/ProfileDate";
+import { DateScreen } from "../../../components/profile/DateScreen/DateScreen";
 import { Modal } from "../../../components/shared/Modal";
 import { NameForm } from "../../../components/profile/ChangeUserForm/ChangeNameForm";
 import { useSelector, useDispatch } from "react-redux";
@@ -59,16 +60,16 @@ export default function Profile(props: any) {
     setShowModal(true);
   };
 
-  // //Changing the value to activate again the filter to rende the posts
-  // const filter = (start, end) => {
-  //   setStartDate(start);
-  //   setEndDate(end);
-  // };
-  // const quitfilter = () => {
-  //   setRemoveFilter((prev) => !prev);
-  //   setStartDate(null);
-  //   setEndDate(null);
-  // };
+  //Changing the value to activate again the filter to rende the posts
+  const filter = (start: any, end: any) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
+  const quitfilter = () => {
+    setRemoveFilter((prev) => !prev);
+    setStartDate(null);
+    setEndDate(null);
+  };
 
   //This hook used to retrieve post data from Firebase and sorted by date
 
@@ -159,10 +160,9 @@ export default function Profile(props: any) {
         <Text></Text>
         <Text></Text>
 
-        <ProfileDate
-        // filterButton={filter}
-        // quitFilterButton={quitfilter}
-        />
+        {/* <ProfileDate filterButton={filter} quitFilterButton={quitfilter} /> */}
+        <DateScreen filterButton={filter} quitFilterButton={quitfilter} />
+
         {/* 
         <FlatList
           data={post}

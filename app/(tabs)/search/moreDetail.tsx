@@ -20,6 +20,7 @@ import { Item } from "../../../utils/moreInformation";
 import { useRouter } from "expo-router";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
+
 const windowWidth = Dimensions.get("window").width;
 export default function MoreDetail() {
   const { item }: any = useLocalSearchParams();

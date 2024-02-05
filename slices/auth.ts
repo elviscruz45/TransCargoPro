@@ -17,16 +17,16 @@ export interface userId {
 }
 
 const initialState: userId = {
-  session: "",
+  session: "", //-----------ok
   isLoading: false,
-  photoURL: "",
-  email: "",
-  cargo: "",
-  companyName: "",
-  descripcion: "",
-  displayName: "",
-  userType: "",
-  assetAssigned: "",
+  photoURL: "", //-----------ok
+  email: "", //-----------ok
+  cargo: "", //-----------ok
+  companyName: "", //-----------ok
+  descripcion: "", //-----------ok
+  displayName: "", //-----------ok
+  userType: "", //-----------ok
+  assetAssigned: "", //-----------ok
 };
 
 export const userIdSlice = createSlice({

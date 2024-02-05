@@ -8,6 +8,7 @@ export function initialValues() {
     photoURL: "",
     email: "",
     companyName: "",
+    companyRUC: "",
     userType: "",
     uid: "",
     assetAssigned: "",
@@ -20,6 +21,6 @@ export function validationSchema() {
       "El nombre y apellidos son requeridos"
     ),
     cargo: Yup.string().required("el cargo es requerido"),
-    descripcion: Yup.string().required("la descripcion es requerida"),
+    companyRUC: Yup.string().required("la descripcion es requerida"),
   });
 }

@@ -64,12 +64,14 @@ export function LoginForm(props: any) {
             type: "success",
             position: "top",
             text1: "Bienvenido",
+            visibilityTime: 1000,
           });
         } else {
           Toast.show({
             type: "error",
             position: "bottom",
             text1: "Actualice sus datos en el perfil para comenzar",
+            visibilityTime: 3000,
           });
           router.push("/(tabs)/profile");
 
@@ -82,6 +84,7 @@ export function LoginForm(props: any) {
           type: "error",
           // position: "top",
           position: "bottom",
+          visibilityTime: 1000,
           text1: "Usuario o contraseña incorrectos",
         });
       }

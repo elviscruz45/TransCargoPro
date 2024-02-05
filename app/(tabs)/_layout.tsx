@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../store";
 import React, { useEffect } from "react";
 import {
+  signIn,
   update_photoURL,
   updateEmail,
   updateCargo,
@@ -14,6 +15,7 @@ import {
   updateDescripcion,
   updateDisplayName,
   updateUserType,
+  updateAssetAssigned,
 } from "../../slices/auth";
 import {
   addDoc,
@@ -46,6 +48,7 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const user = getAuth().currentUser;
+
   //global state management for the user_uid
   const dispatch = useDispatch();
   const isLoading = useSelector((state: RootState) => state.userId.isLoading);
@@ -58,9 +61,10 @@ export default function TabLayout() {
 
   useEffect(() => {
     if (user) {
-      dispatch(update_photoURL(photoURL ?? ""));
-      dispatch(updateDisplayName(displayName ?? ""));
-      dispatch(updateEmail(email ?? ""));
+      dispatch(update_photoURL(user?.photoURL ?? ""));
+      dispatch(updateDisplayName(user?.displayName ?? ""));
+      dispatch(updateEmail(user?.email ?? ""));
+      dispatch(signIn(user?.uid ?? ""));
     }
     async function fetchData() {
       if (session) {
@@ -72,6 +76,7 @@ export default function TabLayout() {
           dispatch(updatecompanyName(docSnap.data().companyName ?? ""));
           dispatch(updateUserType(docSnap.data().userType ?? ""));
           dispatch(updateDescripcion(docSnap.data().descripcion ?? ""));
+          dispatch(updateAssetAssigned(docSnap.data().assetAssigned ?? ""));
         } else {
           console.log("No such document!");
         }
@@ -109,7 +114,6 @@ export default function TabLayout() {
           //   return b.LastEventPosted - a.LastEventPosted;
           // });
           dispatch(setAssetList(lista));
-          console.log("asset sdfsdf");
 
           // setData(lista.slice(0, 50));
           // props.updateAITServicesDATA(lista);
@@ -148,7 +152,6 @@ export default function TabLayout() {
           lista.sort((a: any, b: any) => {
             return b.createdAt - a.createdAt;
           });
-          console.log("event", lista);
           dispatch(setEventList(lista));
           // setPosts(lista);
           // setCompanyName(companyName);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import { styles } from "./index.styles";
+import { DateScreen } from "../../../components/report/DateScreen/DateScreen";
 // import { PieChart } from "../RecursosScreen/PieStatus";
 // import { BarChartMontoServicios } from "../RecursosScreen/BarChartMontoServicios";
 // import { BarChartProceso } from "../RecursosScreen/BarChartProceso";
@@ -16,30 +17,56 @@ import { styles } from "./index.styles";
 // import { EstadoServiceList } from "../RecursosScreen/EstadoServiceList";
 // import { useNavigation } from "@react-navigation/native";
 // import { screen } from "../../../utils";
-// import { Modal } from "../../../components/shared/Modal";
-// import { ChangeDisplayCompany } from "../../../components/Forms/ReportScreen/ChangeCompany/ChangeCompany";
+import { Modal } from "../../../components/shared/Modal";
+import { ChangeDisplayCompany } from "../../../components/report/ChangeCompany/ChangeCompany";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../store";
 
 export default function Report(props: any) {
   const [showModal, setShowModal] = useState(false);
-  const [renderComponent, setRenderComponent] = useState(null);
-  const [company, setCompany] = useState("TOTAL CONTRATISTAS");
-  const [companyList, setCompanyList] = useState();
+  const [renderComponent, setRenderComponent] =
+    useState<React.ReactElement | null>(null);
+  const [area, setArea] = useState("GERENCIA");
+  const [areaList, setAreaList] = useState<any>([]);
+
+  //states of filters
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [removeFilter, setRemoveFilter] = useState(true);
   // console.log(company);
   const onCloseOpenModal = () => setShowModal((prevState) => !prevState);
 
-  // const update_Data = () => {
-  //   setRenderComponent(
-  //     <ChangeDisplayCompany
-  //       onClose={onCloseOpenModal}
-  //       setCompany={setCompany}
-  //       companyList={companyList}
-  //     />
-  //   );
-  //   setShowModal(true);
-  // };
-  // //real time updates
-  // const [data, setData] = useState();
-  // const navigation = useNavigation();
+  const [companyList, setCompanyList] = useState();
+  // glob state management
+  const companyName =
+    useSelector((state: RootState) => state.userId.companyName) ?? "";
+  const globalAssetList: any = useSelector(
+    (state: RootState) => state.home.assetList
+  );
+  console.log("globalAssetListglobalAssetList", globalAssetList);
+  //Changing the value to activate again the filter to rende the posts
+  const filter = (start: any, end: any) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
+  const quitfilter = () => {
+    setRemoveFilter((prev) => !prev);
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  const update_Area = () => {
+    setRenderComponent(
+      <ChangeDisplayCompany
+        onClose={onCloseOpenModal}
+        setArea={setArea}
+        areaList={areaList}
+      />
+    );
+    setShowModal(true);
+  };
+  //real time updates
+  const [data, setData] = useState();
 
   // //states to view the tables
   // const [serviciosActivos, setServiciosActivos] = useState(false);
@@ -50,28 +77,25 @@ export default function Report(props: any) {
   // const [comprometido, setComprometido] = useState(false);
   // //Data about the company belong this event
 
-  // const regex = /@(.+?)\./i;
-  // const companyName = props.email?.match(regex)?.[1].toUpperCase() || "Anonimo"; // console.log("searchResults", searchResults);
-
-  // // useEffect(() => {
-  // //   setCompanyList([
-  // //     ...new Set(props.servicesData.map((item) => item.companyName)),
-  // //   ]);
-  // //   if (companyName !== "FMI") {
-  // //     setCompany(companyName);
-  // //   }
-  // // }, []);
-
   // useEffect(() => {
-  //   if (Array.isArray(props.servicesData)) {
-  //     setCompanyList([
-  //       ...new Set(props.servicesData.map((item) => item.companyName)),
-  //     ]);
-  //   }
+  //   setCompanyList([
+  //     ...new Set(globalAssetList.map((item) => item.companyName)),
+  //   ]);
   //   if (companyName !== "FMI") {
   //     setCompany(companyName);
   //   }
   // }, []);
+
+  useEffect(() => {
+    if (Array.isArray(globalAssetList)) {
+      setAreaList([
+        ...new Set(globalAssetList.map((item: any) => item.nombre)),
+      ]);
+    }
+    // if (companyName !== "FMI") {
+    //   setArea(companyName);
+    // }
+  }, []);
 
   // useEffect(() => {
   //   if (props.servicesData && company === "TOTAL CONTRATISTAS") {
@@ -92,13 +116,6 @@ export default function Report(props: any) {
   //     );
   //   }
   // }, [props.servicesData, company]);
-
-  // // go to a history screen
-  // const goToHistoryScreen = () => {
-  //   navigation.navigate(screen.report.tab, {
-  //     screen: screen.report.history,
-  //   });
-  // };
 
   // if (!data || !company || !companyList) {
   //   return (
@@ -129,13 +146,11 @@ export default function Report(props: any) {
         showsVerticalScrollIndicator={false}
       >
         <Text></Text>
-        <View style={{ flexDirection: "row", alignSelf: "center" }}>
+        <View style={{ alignSelf: "center" }}>
           {"FMI" === "FMI" ? (
-            <TouchableOpacity
-            // onPress={() => update_Data()}
-            >
+            <TouchableOpacity onPress={() => update_Area()}>
               <Image
-                source={require("../../../assets/pictures/AddImage.png")}
+                source={require("../../../assets/assetpics/companyIcon.png")}
                 style={styles.roundImageUpload}
               />
             </TouchableOpacity>
@@ -146,20 +161,30 @@ export default function Report(props: any) {
             />
           )}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
           // onPress={() => goToHistoryScreen()}
           >
             <Image
               source={require("../../../assets/pictures/AddImage.png")}
               style={styles.history}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         {"FMI" !== "FMI" ? (
           <Text style={styles.company}>"Maxnicol"</Text>
         ) : (
-          <Text style={styles.company}>{company}</Text>
+          <Text style={styles.company}>{area}</Text>
         )}
+        <Text></Text>
+        <Text></Text>
+
+        <DateScreen
+          filterButton={filter}
+          quitFilterButton={() => quitfilter()}
+        />
+
+        <Text></Text>
+        <Text></Text>
         {/* {company !== "FMI" && company !== "TOTAL CONTRATISTAS" && (
             <RecursosHumanos company={company} />
           )} */}
@@ -175,7 +200,7 @@ export default function Report(props: any) {
           // onPress={() => setServiciosActivos(true)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/plus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -184,7 +209,7 @@ export default function Report(props: any) {
           // onPress={() => setServiciosActivos(false)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/minus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -207,7 +232,7 @@ export default function Report(props: any) {
           // onPress={() => setEstadoServicios(true)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/plus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -216,7 +241,7 @@ export default function Report(props: any) {
           // onPress={() => setEstadoServicios(false)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/minus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -233,7 +258,7 @@ export default function Report(props: any) {
           // onPress={() => setServiciosInactivos(true)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/plus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -242,7 +267,7 @@ export default function Report(props: any) {
           // onPress={() => setServiciosInactivos(false)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/minus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -278,7 +303,7 @@ export default function Report(props: any) {
           // onPress={() => setMontoServicios(true)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/plus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -287,7 +312,7 @@ export default function Report(props: any) {
           //  onPress={() => setMontoServicios(false)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/minus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -309,7 +334,7 @@ export default function Report(props: any) {
           // onPress={() => setMontoEDP(true)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/plus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -318,7 +343,7 @@ export default function Report(props: any) {
           // onPress={() => setMontoEDP(false)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/minus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -342,7 +367,7 @@ export default function Report(props: any) {
           // onPress={() => setComprometido(true)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/plus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -351,7 +376,7 @@ export default function Report(props: any) {
           //  onPress={() => setComprometido(false)}
           >
             <Image
-              source={require("../../../assets/pictures/AddImage.png")}
+              source={require("../../../assets/pictures/minus3.png")}
               style={styles.roundImageUploadmas}
             />
           </TouchableOpacity>
@@ -364,14 +389,14 @@ export default function Report(props: any) {
         // onPress={() => getExcelReportData(data)}
         >
           <Image
-            source={require("../../../assets/pictures/AddImage.png")}
+            source={require("../../../assets/pictures/excel2.png")}
             style={styles.excel}
           />
         </TouchableOpacity>
       </ScrollView>
-      {/* <Modal show={showModal} close={onCloseOpenModal}>
-          {renderComponent}
-        </Modal> */}
+      <Modal show={showModal} close={onCloseOpenModal}>
+        {renderComponent}
+      </Modal>
     </>
   );
   //}

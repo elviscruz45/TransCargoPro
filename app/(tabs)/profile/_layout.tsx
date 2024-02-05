@@ -52,24 +52,24 @@ export default function _layout() {
           // ),
         }}
       />
-      {/* <Stack.Screen
-          name="ManualExpenses"
-          options={{
-            title: "Creacion Gasto Manual",
-            presentation: "modal",
-            headerRight: () => (
-              <TouchableOpacity onPress={() => console.log("save")}>
-                <Text>Guardar</Text>
-              </TouchableOpacity>
-            ),
-            headerLeft: () => (
-              <TouchableOpacity onPress={() => console.log("cancel")}>
-                <Text>Cancelar</Text>
-              </TouchableOpacity>
-            ),
-          }}
-        />
-        <Stack.Screen
+      <Stack.Screen
+        name="assetAssigned"
+        options={{
+          title: "Asset List",
+          // presentation: "modal",
+          // headerRight: () => (
+          //   <TouchableOpacity onPress={() => console.log("save")}>
+          //     <Text>Guardar</Text>
+          //   </TouchableOpacity>
+          // ),
+          // headerLeft: () => (
+          //   <TouchableOpacity onPress={() => console.log("cancel")}>
+          //     <Text>Cancelar</Text>
+          //   </TouchableOpacity>
+          // ),
+        }}
+      />
+      {/*  <Stack.Screen
           name="CameraScreen"
           options={{
             title: "",

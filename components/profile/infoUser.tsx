@@ -26,7 +26,11 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../app/store";
 import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../utils/firebase";
+import { useRouter } from "expo-router";
+
 export function InfoUser(props: any) {
+  const router = useRouter();
+
   const [showModal, setShowModal] = useState(false);
   const [renderComponent, setRenderComponent] = useState(null);
   const session = useSelector((state: RootState) => state.userId.session);
@@ -111,7 +115,16 @@ export function InfoUser(props: any) {
   //     item.RejectionPerformed?.includes(props.email)
   //   );
   // });
+  const goToApprovalScreen = () => {
+    router.push({
+      pathname: "/profile/assetAssigned",
+      // params: { item: item },
+    });
 
+    // navigation.navigate(screen.profile.tab, {
+    //   screen: screen.profile.approvals,
+    // });
+  };
   return (
     <>
       <View style={styles.content}>
@@ -145,29 +158,20 @@ export function InfoUser(props: any) {
         <Text> </Text>
         <Text> </Text>
 
-        {/* {props.profile?.userType === userTypeList.manager && (
+        {true && (
           <TouchableOpacity
-            style={styles.btnContainer4}
-            onPress={() => updateManpower()}
+            // style={styles.btnContainer4}
+            onPress={() => goToApprovalScreen()}
           >
             <Image
-              source={require("../../../../assets/manpower2.png")}
+              source={require("../../assets/pictures/manpower2.png")}
               style={styles.roundImageUpload2}
             />
           </TouchableOpacity>
-        )} */}
+        )}
 
         <Text> </Text>
-        {/* <TouchableOpacity
-          style={styles.btnContainer4}
-          onPress={() => goToApprovalScreen()}
-        >
-          <Image
-            testID="change-manpower-component"
-            source={require("../../../../assets/bell1.png")}
-            style={styles.roundImageUpload}
-          />
-        </TouchableOpacity> */}
+
         {/* 
         {approvalListPending && (
           <Text style={styles.bellNomber}>{approvalListPending.length}</Text>
