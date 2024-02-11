@@ -4,6 +4,7 @@ import userIdSlice from "../slices/auth";
 import publishSlice from "../slices/publish";
 import homeSlice from "../slices/home";
 import searchSlice from "../slices/search";
+import profileSlice from "../slices/profile";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     publish: publishSlice,
     home: homeSlice,
     search: searchSlice,
+    profile: profileSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

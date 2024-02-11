@@ -46,10 +46,6 @@ export const styles = StyleSheet.create({
     alignItems: "center", // Align contents vertically
   },
   btnActualizarStyles: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-
     // marginTop: 30,
     // paddingVertical: 30,
     // marginLeft: 100,
@@ -57,7 +53,8 @@ export const styles = StyleSheet.create({
 
     // verticalAlign: "bottom",
     textAlignVertical: "center",
-    // backgroundColor: "#2A3B76",
+    borderRadius: 20,
+    backgroundColor: "#2A3B76",
     marginHorizontal: windowWidth / 8,
 
     // borderTopWidth: 1,

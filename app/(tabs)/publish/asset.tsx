@@ -36,7 +36,6 @@ import { useRouter, Redirect } from "expo-router";
 export default function Asset(props: any) {
   const emptyimage = require("../../../assets/assetpics/freight02.jpeg");
   // const navigation = useNavigation();
-  const [activo, setActivo] = useState();
   const [nombre, setNombre] = useState();
   const router = useRouter();
   const email = useSelector((state: RootState) => state.userId.email) ?? "";
@@ -47,69 +46,7 @@ export default function Asset(props: any) {
   const companyName =
     useSelector((state: RootState) => state.userId.companyName) ?? "";
 
-  //fetching data from firebase to retrieve all users
-
-  // useEffect(() => {
-  //   // Function to fetch data from Firestore
-  //   if (props.email) {
-  //     const companyName = props.email?.match(/@(.+?)\./i)?.[1] || "Anonimo";
-  //     async function fetchData() {
-  //       try {
-  //         const queryRef1 = query(
-  //           collection(db, "users"),
-  //           where("companyName", "==", "fmi"),
-  //           orderBy("email", "desc")
-  //         );
-
-  //         const queryRef2 = query(
-  //           collection(db, "users"),
-  //           where("companyName", "==", companyName),
-  //           orderBy("email", "desc")
-  //         );
-
-  //         const getDocs1 = await getDocs(queryRef1);
-  //         const getDocs2 =
-  //           companyName !== "fmi" ? await getDocs(queryRef2) : null;
-
-  //         const lista = [];
-
-  //         // Process results from the first query
-  //         if (getDocs1) {
-  //           getDocs1.forEach((doc) => {
-  //             lista.push(doc.data());
-  //           });
-  //         }
-
-  //         // Process results from the second query
-  //         if (getDocs2) {
-  //           getDocs2.forEach((doc) => {
-  //             lista.push(doc.data());
-  //           });
-  //         }
-
-  //         // //avoid duplicates of email of lista
-  //         // const unique = lista.filter(
-  //         //   (v, i, a) => a.findIndex((t) => t.email === v.email) === i
-  //         // );
-
-  //         // Save the merged results to the state or do any other necessary operations
-  //         props.saveTotalUsers(lista);
-  //       } catch (error) {
-  //         console.error("Error fetching data:", error);
-  //         // Handle the error as needed
-  //       }
-  //     }
-  //     // Call the fetchData function when the component mounts
-  //     fetchData();
-  //   }
-  // }, [props.email]);
-
-  // // find Index of areaList array where there is the image of the area to render the icon Avatar
-  // const IndexObjectImageArea = areaLists.findIndex((obj) => obj.value === area);
-  // const imageSource = areaLists[IndexObjectImageArea]?.image || emptyimage;
-  function capitalizeFirstLetter(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+  // find Index of areaList array where there is the image of the area to render the icon Avatar
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -151,22 +88,10 @@ export default function Asset(props: any) {
         newData.nombrePerfil = displayName || "Anonimo";
 
         newData.companyName = companyName || "Anonimo";
-
-        // //Uploading data to Firebase and adding the ID firestore
-        // const docRef = await addDoc(collection(db, "Asset"), newData);
-        // newData.idFirebaseAsset = docRef.id;
-        // const RefFirebase = doc(db, "Asset", newData.idFirebaseAsset);
-        // await updateDoc(RefFirebase, newData);
-
         //Uploading data to Firebase and adding the ID firestore
         const docRef = doc(collection(db, "Asset"));
         newData.idFirebaseAsset = docRef.id;
         await setDoc(docRef, newData);
-        // // this hedlps to go to the begining of the process
-        // navigation.navigate(screen.post.post);
-        // // navigation.navigate(screen.home.tab, {
-        // //   screen: screen.home.home,
-        // // });
 
         Toast.show({
           type: "success",
@@ -195,13 +120,11 @@ export default function Asset(props: any) {
           style={styles.roundImage}
           cachePolicy={"memory-disk"}
         />
-        <Text style={styles.name}>
-          {nombre || activo || "Nombre del activo"}
-        </Text>
+        <Text style={styles.name}>{nombre || "Nombre del activo"}</Text>
       </View>
 
       <View style={styles.sectionForms}></View>
-      <AssetForm formik={formik} setActivo={setActivo} setNombre={setNombre} />
+      <AssetForm formik={formik} setNombre={setNombre} />
 
       <Button
         title="Agregar"

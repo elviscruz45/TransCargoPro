@@ -36,6 +36,8 @@ export function InfoUser(props: any) {
   const session = useSelector((state: RootState) => state.userId.session);
   const photoUrl = useSelector((state: RootState) => state.userId.photoURL);
   const email = useSelector((state: RootState) => state.userId.email);
+  const companyRUC = useSelector((state: RootState) => state.userId.companyRUC);
+
   const displayName = useSelector(
     (state: RootState) => state.userId.displayName
   );
@@ -115,12 +117,17 @@ export function InfoUser(props: any) {
   //     item.RejectionPerformed?.includes(props.email)
   //   );
   // });
-  const goToApprovalScreen = () => {
+  const goToAssetScreen = () => {
     router.push({
       pathname: "/profile/assetAssigned",
       // params: { item: item },
     });
-
+  };
+  const goToUsersScreen = () => {
+    router.push({
+      pathname: "/profile/userAssigned",
+      // params: { item: item },
+    });
     // navigation.navigate(screen.profile.tab, {
     //   screen: screen.profile.approvals,
     // });
@@ -150,9 +157,10 @@ export function InfoUser(props: any) {
 
           <Text>{email}</Text>
           <Text>{userType}</Text>
+          <Text>{companyRUC}</Text>
 
           {true && <Text>{cargo}</Text>}
-          {descripcion && <Text>{descripcion}</Text>}
+          {/* {descripcion && <Text>{descripcion}</Text>} */}
         </View>
         <Text> </Text>
         <Text> </Text>
@@ -161,7 +169,21 @@ export function InfoUser(props: any) {
         {true && (
           <TouchableOpacity
             // style={styles.btnContainer4}
-            onPress={() => goToApprovalScreen()}
+            onPress={() => goToAssetScreen()}
+          >
+            <Image
+              source={require("../../assets/assetpics/assetsIcon.png")}
+              style={styles.roundImageUpload2}
+            />
+          </TouchableOpacity>
+        )}
+        <Text> </Text>
+        <Text> </Text>
+
+        {true && (
+          <TouchableOpacity
+            // style={styles.btnContainer4}
+            onPress={() => goToUsersScreen()}
           >
             <Image
               source={require("../../assets/pictures/manpower2.png")}

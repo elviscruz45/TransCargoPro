@@ -24,6 +24,7 @@ import {
   updateDisplayName,
   updateUserType,
   updateAssetAssigned,
+  updatecompanyRUC,
 } from "../../../slices/auth";
 
 export function NameForm(props: any) {
@@ -70,6 +71,8 @@ export function NameForm(props: any) {
           dispatch(updateDisplayName(newData.displayNameform));
           dispatch(updateCargo(newData.cargo));
           dispatch(updateDescripcion(newData.descripcion));
+          dispatch(updatecompanyRUC(newData.companyRUC));
+
           // dispatch(update_photoURL(newData.photoURL));
 
           Toast.show({
@@ -99,6 +102,7 @@ export function NameForm(props: any) {
           dispatch(updateDisplayName(newData.displayNameform));
           dispatch(updateUserType(newData.userType));
           dispatch(updateAssetAssigned(newData.assetAssigned));
+          dispatch(updatecompanyRUC(newData.companyRUC));
 
           // props.update_firebaseProfile(newData);
           // props.update_firebaseUserName(newData.displayNameform);

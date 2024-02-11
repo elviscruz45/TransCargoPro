@@ -110,8 +110,8 @@ export const styles = StyleSheet.create({
     margin: 10,
   },
   image2: {
-    width: "15%",
-    height: 55,
+    width: 50,
+    height: 50,
     borderRadius: 10,
     marginBottom: 15,
 
@@ -148,7 +148,7 @@ export const styles = StyleSheet.create({
     // marginTop: 3,
     fontWeight: "normal",
     // marginHorizontal: windowWidth * 0.28,
-    marginRight: windowWidth * 0.2,
+    // marginRight: windowWidth * 0.2,
     // margin: 10,
     // paddingRight: 60,
   },

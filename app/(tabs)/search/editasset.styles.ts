@@ -22,7 +22,21 @@ export const styles = StyleSheet.create({
     height: 80,
     marginRight: 15,
   },
-
+  // editIcon: {
+  //   // flexDirection: "row",
+  //   // alignItems: "center",
+  //   // marginRight: windowWidth * 0.1,
+  //   // marginLeft: windowWidth * 0.1,
+  //   // paddingHorizontal: 15,
+  //   marginTop: 10,
+  //   width: 20,
+  //   height: 20,
+  //   alignSelf: "flex-end",
+  //   // marginRight: 10,
+  //   // marginTop: windowHeight * 0.01,
+  //   zIndex: 1000,
+  //   position: "absolute",
+  // },
   radioCard: {
     margin: 3,
     // fontFamily: "DM Sans",

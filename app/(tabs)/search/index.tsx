@@ -48,7 +48,7 @@ export default function SearchAsset() {
       });
       setSearchResults(result.slice(0, 50));
     }
-  }, [searchText]);
+  }, [searchText, globalAssetList]);
 
   return (
     <View style={{ backgroundColor: "white", flex: 1 }}>

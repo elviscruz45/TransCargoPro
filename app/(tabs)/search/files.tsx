@@ -15,7 +15,7 @@ import { Item } from "../../../utils/files";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
 // import { screen } from "../../../utils";
-
+import { formatDate } from "../../../utils/formats";
 // import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
@@ -30,15 +30,9 @@ export default function FileScreen() {
   const currentAsset: any = assetList.find(
     (asset: any) => asset.idFirebaseAsset === item
   );
-  // const {
-  //   route: {
-  //     params: { Item },
-  //   },
-  // } = props;
-  // const navigation = useNavigation();
-  // const documents = Item.pdfFile?.filter((item) => {
-  //   return typeof item !== "string";
-  // });
+
+  const files = currentAsset?.files;
+
   const uploadFile = useCallback(async (uri: any) => {
     try {
       const supported = await Linking.canOpenURL(uri);
@@ -71,14 +65,24 @@ export default function FileScreen() {
   const goToAddDocsForm = () => {
     router.push({
       pathname: "/search/addFiles",
-      // params: { item: item },
+      params: { item: item },
     });
-    // navigation.navigate(screen.search.tab, {
-    //   screen: screen.search.addDocs,
-    //   // params: { Item: item },
-    // });
   };
-
+  const goToEditDocs = (
+    tipoFile: any,
+    FilenameTitle: any,
+    fechaPostFormato: any
+  ) => {
+    router.push({
+      pathname: "/search/editFiles",
+      params: {
+        tipoFile: tipoFile,
+        uidDoc: item,
+        FilenameTitle: FilenameTitle,
+        fechaPostFormato: fechaPostFormato,
+      },
+    });
+  };
   return (
     <ScrollView
       style={{ backgroundColor: "white" }} // Add backgroundColor here
@@ -96,49 +100,86 @@ export default function FileScreen() {
       </TouchableOpacity>
 
       <FlatList
-        data={documents}
+        data={files}
         scrollEnabled={false}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity onPress={() => uploadFile(item.pdfPrincipal)}>
-              <View style={{ marginBottom: 20 }}>
-                <View style={styles.equipments2}>
-                  <ImageExpo
-                    source={require("../../../assets/pictures/pdf4.png")}
-                    style={styles.image2}
-                    cachePolicy={"memory-disk"}
-                  />
-                  <View>
-                    <View style={[{ flexDirection: "row" }]}>
-                      <Text style={{ fontWeight: "bold" }}>{"Titulo: "}</Text>
-                      <Text style={[styles.info2, { marginRight: "30%" }]}>
-                        {item.FilenameTitle}
-                      </Text>
-                    </View>
-                    <View style={[{ flexDirection: "row" }]}>
-                      <Text style={{ fontWeight: "bold" }}>
-                        {"Tipo de Documento: "}
-                      </Text>
-                      <Text style={styles.info2}>{item.tipoFile}</Text>
-                    </View>
-                    <View style={[{ flexDirection: "row" }]}>
-                      <Text style={{ fontWeight: "bold" }}>{"Autor: "}</Text>
-                      <Text style={styles.info2}>{item.email}</Text>
-                    </View>
+            <View style={{ flexDirection: "row" }}>
+              <TouchableOpacity
+                onPress={() => uploadFile(item.pdfFileURLFirebase)}
+                style={{ flex: 3, backgroundColor: "white", borderWidth: 0.3 }}
+              >
+                <View style={{ marginBottom: 20, width: "50%" }}>
+                  <View style={styles.equipments2}>
+                    <ImageExpo
+                      source={require("../../../assets/pictures/pdf4.png")}
+                      style={styles.image2}
+                      cachePolicy={"memory-disk"}
+                    />
+                    <View>
+                      <View style={[{ flexDirection: "row" }]}>
+                        <Text style={{ fontWeight: "bold" }}>{"Titulo: "}</Text>
+                        <Text style={[styles.info2]}>
+                          {item.FilenameTitle}{" "}
+                        </Text>
+                      </View>
+                      <View style={[{ flexDirection: "row" }]}>
+                        <Text style={{ fontWeight: "bold" }}>{"Tipo: "}</Text>
+                        <Text style={styles.info2}>{item.tipoFile}</Text>
+                      </View>
+                      <View style={[{ flexDirection: "row" }]}>
+                        <Text style={{ fontWeight: "bold" }}>{"Autor: "}</Text>
+                        <Text style={styles.info2}>{item.autor}</Text>
+                      </View>
 
-                    <View style={[{ flexDirection: "row" }]}>
-                      <Text style={{ fontWeight: "bold" }}>{"Fecha: "}</Text>
-                      <Text style={{}}>
-                        {item.fechaPostFormato || "No definido"}
-                      </Text>
+                      <View style={[{ flexDirection: "row" }]}>
+                        <Text style={{ fontWeight: "bold" }}>{"Fecha:"}</Text>
+                        <Text style={{}}>
+                          {item.fechaPostFormato || "No definido"}
+                        </Text>
+                      </View>
                     </View>
                   </View>
                 </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onLongPress={() =>
+                  goToEditDocs(
+                    item.tipoFile,
+                    item.FilenameTitle,
+                    item.fechaPostFormato
+                  )
+                }
+                style={{
+                  // backgroundColor: "green",
+                  // paddingVertical: "10%",
+
+                  flex: 1,
+                  // alignSelf: "center",
+                  borderWidth: 0.3,
+                }} // Add backgroundColor here
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    marginTop: "10%",
+                    marginLeft: "2%",
+                  }}
+                >
+                  Vencimiento:
+                </Text>
+                <Text style={{ alignSelf: "center" }}>
+                  {/* {item.fechaVencimiento} */}
+
+                  {formatDate(item.fechaVencimiento) || "No definido"}
+                </Text>
+              </TouchableOpacity>
+            </View>
           );
         }}
-        keyExtractor={(item) => `${item.FilenameTitle}-${item.pdfPrincipal}`} // Provide a unique key for each item
+        keyExtractor={(item) =>
+          `${item.FilenameTitle}-${item.fechaPostFormato}`
+        } // Provide a unique key for each item
       />
     </ScrollView>
   );

@@ -16,6 +16,7 @@ import {
   updateDisplayName,
   updateUserType,
   updateAssetAssigned,
+  updatecompanyRUC,
 } from "../../slices/auth";
 import {
   addDoc,
@@ -77,6 +78,7 @@ export default function TabLayout() {
           dispatch(updateUserType(docSnap.data().userType ?? ""));
           dispatch(updateDescripcion(docSnap.data().descripcion ?? ""));
           dispatch(updateAssetAssigned(docSnap.data().assetAssigned ?? ""));
+          dispatch(updatecompanyRUC(docSnap.data().companyRUC ?? ""));
         } else {
           console.log("No such document!");
         }

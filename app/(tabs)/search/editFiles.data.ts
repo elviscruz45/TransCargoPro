@@ -15,6 +15,6 @@ export function initialValues() {
 export function validationSchema() {
   return Yup.object({
     FilenameTitle: Yup.string().required("Campo obligatorio"),
-    tipoFile: Yup.string().required("Campo obligatorio"),
+    // tipoFile: Yup.string().required("Campo obligatorio"),
   });
 }

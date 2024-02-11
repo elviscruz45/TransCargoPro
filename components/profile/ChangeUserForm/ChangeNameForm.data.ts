@@ -12,6 +12,7 @@ export function initialValues() {
     userType: "",
     uid: "",
     assetAssigned: "",
+    companyManagerConfimation: "",
   };
 }
 

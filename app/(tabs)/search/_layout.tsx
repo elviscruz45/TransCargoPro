@@ -81,7 +81,7 @@ export default function _layout() {
         options={{
           title: "addFiles",
           // headerShown: false,
-          presentation: "modal",
+          // presentation: "modal",
         }}
       />
       <Stack.Screen
@@ -89,7 +89,15 @@ export default function _layout() {
         options={{
           title: "editasset",
           // headerShown: false,
-          presentation: "modal",
+          // presentation: "modal",
+        }}
+      />
+      <Stack.Screen
+        name="editFiles"
+        options={{
+          title: "editFiles",
+          // headerShown: false,
+          // presentation: "modal",
         }}
       />
       {/*  <Stack.Screen

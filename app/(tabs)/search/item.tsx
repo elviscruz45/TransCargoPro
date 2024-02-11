@@ -1,36 +1,51 @@
 import { StyleSheet } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { getAuth, updateProfile } from "firebase/auth";
+import React, { useState, useEffect } from "react";
+
 import {
   getStorage,
   ref,
-  uploadBytes,
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
 import { collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../utils/firebase";
-
-// import EditScreenInfo from '../../components/EditScreenInfo';
-// import { Text, View } from '../../components/Themed';
 import { Text, View, ScrollView, Image, Alert } from "react-native";
-import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { Image as ImageExpo } from "expo-image";
-import { SearchBar, Icon } from "@rneui/themed";
-import { assetLists } from "../../../utils/assetList";
-import { useNavigation, useLocalSearchParams } from "expo-router";
-import { CommonActions } from "@react-navigation/native";
-import { Button } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import { styles } from "./item.styles";
-import { postLists } from "../../../utils/postList";
-// import { History } from "../../../components/search/H";
 import { History } from "../../../components/search/History/History";
 import { useRouter } from "expo-router";
 import { Date } from "../../../components/search/History/Date";
 import Toast from "react-native-toast-message";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
+import { DateScreen } from "../../../components/search/DateScreen/DateScreen";
+// const formatDate = (item: any) => {
+//   if (item) return;
+//   const date = new Date(item.seconds * 1000);
 
+//   const monthNames = [
+//     "ene.",
+//     "feb.",
+//     "mar.",
+//     "abr.",
+//     "may.",
+//     "jun.",
+//     "jul.",
+//     "ago.",
+//     "sep.",
+//     "oct.",
+//     "nov.",
+//     "dic.",
+//   ];
+//   const day = date.getDate();
+//   const month = monthNames[date.getMonth()];
+//   const year = date.getFullYear();
+//   const formattedDate = `${day} ${month} ${year}`;
+//   return formattedDate;
+// };
 export default function Item(props: any) {
   const { item }: any = useLocalSearchParams();
   const router = useRouter();
@@ -40,9 +55,11 @@ export default function Item(props: any) {
     (asset: any) => asset.idFirebaseAsset === item
   );
   // console.log("item");
-
   const dispatch = useDispatch();
-
+  //states of filters
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [removeFilter, setRemoveFilter] = useState(true);
   const handleResetAction = () => {
     // navigation.goBack();
   };
@@ -133,7 +150,16 @@ export default function Item(props: any) {
       { cancelable: false }
     );
   };
-
+  //Changing the value to activate again the filter to rende the posts
+  const filter = (start: any, end: any) => {
+    setStartDate(start);
+    setEndDate(end);
+  };
+  const quitfilter = () => {
+    setRemoveFilter((prev) => !prev);
+    setStartDate(null);
+    setEndDate(null);
+  };
   return (
     <>
       <ScrollView
@@ -149,7 +175,7 @@ export default function Item(props: any) {
                 source={
                   currentAsset.photoServiceURL
                     ? { uri: currentAsset.photoServiceURL }
-                    : require("../../../assets/assetpics/freight02.jpeg")
+                    : require("../../../assets/assetpics/carIcon.jpg")
                 }
                 style={{
                   // alignContent: "center",
@@ -176,8 +202,8 @@ export default function Item(props: any) {
             </Text>
             <Text style={styles.info}>
               {"Cambio aceite Prox:"}
-              {currentAsset.cambioAceiteProx}
-              {"Km"}
+              {currentAsset?.cambioAceiteProx}
+              {" Km"}
             </Text>
             <Text style={styles.info}>
               {"Gasto Combustible:"} {currentAsset.gastoCombustible} {"Gls"}
@@ -228,26 +254,7 @@ export default function Item(props: any) {
               style={styles.roundImageUpload}
             />
           </TouchableOpacity>
-          {/* <TouchableOpacity
-            style={styles.btnContainer4}
-            // onPress={() => goToPublicar()}
-          >
-            <Image
-              source={require("../../../assets/pictures/TakePhoto2.png")}
-              style={styles.roundImageUpload}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.btnContainer4}
-            // onPress={() => goToDocsToApprove(serviceInfo)}
-          >
-            <Image
-              source={require("../../../assets/pictures/AddImage.png")}
-              style={styles.roundImageUpload}
-            />
-          </TouchableOpacity> */}
         </View>
-        <Text></Text>
         <Text></Text>
 
         <Text
@@ -260,7 +267,11 @@ export default function Item(props: any) {
         >
           Historial de Eventos
         </Text>
-        <Date />
+        <Text></Text>
+
+        <DateScreen filterButton={filter} quitFilterButton={quitfilter} />
+
+        {/* <Date /> */}
         <Text></Text>
 
         {/* <GanttHistorial datas={post} comentPost={comentPost} /> */}

@@ -69,6 +69,23 @@ export default function _layout() {
           // ),
         }}
       />
+      <Stack.Screen
+        name="userAssigned"
+        options={{
+          title: "User List",
+          // presentation: "modal",
+          // headerRight: () => (
+          //   <TouchableOpacity onPress={() => console.log("save")}>
+          //     <Text>Guardar</Text>
+          //   </TouchableOpacity>
+          // ),
+          // headerLeft: () => (
+          //   <TouchableOpacity onPress={() => console.log("cancel")}>
+          //     <Text>Cancelar</Text>
+          //   </TouchableOpacity>
+          // ),
+        }}
+      />
       {/*  <Stack.Screen
           name="CameraScreen"
           options={{

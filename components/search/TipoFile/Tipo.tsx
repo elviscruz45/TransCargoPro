@@ -2,23 +2,23 @@ import { SelectList } from "react-native-dropdown-select-list";
 import React, { useState } from "react";
 import { connect } from "react-redux";
 // import { tipoEvento } from "../../../../utils/modalList";
-import { tipoActivo } from "../../../../utils/tipoActivo";
+import { tipoDocumento } from "../../../utils/tipoFile";
 
 interface Event {
   onClose: () => void;
   formik: any; // replace with the actual type
-  setTipoActivo: (value: string) => void;
+  setTipoFile: (value: string) => void;
 }
 
-export const SelectActivo: React.FC<Event> = ({
+export const SelectDocument: React.FC<Event> = ({
   onClose,
   formik,
-  setTipoActivo,
+  setTipoFile,
 }) => {
   function saveProperty(itemValue: any) {
     // setText(itemValue);
-    formik.setFieldValue("tipoActivo", itemValue);
-    setTipoActivo(itemValue);
+    formik.setFieldValue("tipoFile", itemValue);
+    setTipoFile(itemValue);
 
     onClose();
   }
@@ -26,7 +26,7 @@ export const SelectActivo: React.FC<Event> = ({
   return (
     <SelectList
       setSelected={(val: any) => saveProperty(val)}
-      data={tipoActivo}
+      data={tipoDocumento}
       save="value"
       maxHeight={250}
     />

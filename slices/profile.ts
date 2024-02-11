@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface CounterState {
+export interface ProfileState {
   value: number;
+  employees: any;
 }
 
-const initialState: CounterState = {
+const initialState: ProfileState = {
   value: 0,
+  employees: [],
 };
 
-export const counterSlice = createSlice({
+export const profileSlice = createSlice({
   name: "counter",
   initialState,
   reducers: {
@@ -26,10 +28,14 @@ export const counterSlice = createSlice({
     incrementByAmount: (state, action: PayloadAction<number>) => {
       state.value += action.payload;
     },
+    updateEmployees: (state, action: PayloadAction<number>) => {
+      state.employees = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { increment, decrement, incrementByAmount, updateEmployees } =
+  profileSlice.actions;
 
-export default counterSlice.reducer;
+export default profileSlice.reducer;

@@ -1,13 +1,13 @@
 import { View, Text } from "react-native";
 import React, { useState } from "react";
-import { styles } from "./addFiles.styles";
+import { styles } from "./editFiles.styles";
 import { Input, Button } from "@rneui/themed";
 import * as DocumentPicker from "expo-document-picker";
 import { Modal } from "../../../components/shared/Modal";
 import { ChangeDisplayFileTipo } from "../../../components/search/ChangeFIleTipo/ChangeDisplayFileTipo";
 // import { connect } from "react-redux";
 import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./addFiles.data";
+import { initialValues, validationSchema } from "./editFiles.data";
 import { db } from "../../../utils/firebase";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -28,29 +28,26 @@ import { ChangeDate } from "../../../components/publish/forms/ChangeDates/Change
 import { formatdate, CurrentFormatDate } from "../../../utils/formats";
 import { SelectDocument } from "../../../components/search/TipoFile/Tipo";
 
-export default function AddDocs() {
+export default function EditDocs() {
   const [pickedDocument, setPickedDocument] = useState(null);
   const [renderComponent, setRenderComponent] =
     useState<React.ReactNode | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [shortNameFileUpdated, setShortNameFileUpdated] = useState("");
-  const [tipoFile, setTipoFile] = useState("");
-  //global state management for the user_uid
-  const { item }: any = useLocalSearchParams();
+  const [tipoActivo, setTipoActivo] = useState("");
 
+  //global state management for the user_uid
+  const { tipoFile, uidDoc, FilenameTitle, fechaPostFormato }: any =
+    useLocalSearchParams();
   const assetList =
     useSelector((state: RootState) => state.home.assetList) ?? [];
   const currentAsset: any = assetList.find(
-    (asset: any) => asset.idFirebaseAsset === item
+    (asset: any) => asset.idFirebaseAsset === uidDoc
   );
   const files = currentAsset?.files;
 
-  const tipoFileList = files.map((item: any) => item.tipoFile);
-
-  console.log("tipoFileList", tipoFileList);
-
   const email = useSelector((state: RootState) => state.userId.email) ?? "";
-  console.log("eamil", email);
+  console.log("casa", email);
   // const navigation = useNavigation();
   const router = useRouter();
 
@@ -71,40 +68,64 @@ export default function AddDocs() {
     validateOnChange: false,
     onSubmit: async (formValue) => {
       try {
-        if (tipoFileList.includes(formValue.tipoFile)) {
-          router.back();
-          Toast.show({
-            type: "error",
-            position: "bottom",
-            text1: "Ya esta creado este documento",
-          });
-          return;
-        }
-
+        console.log("111111111");
+        const newFileListToUpdate = [...files];
         const newData = formValue;
-        newData.fechaPostFormato = CurrentFormatDate();
-        newData.autor = email;
+        newData.fechaPostFormato = CurrentFormatDate(); //ok
+        newData.autor = email; //ok
+        newData.tipoFile = tipoFile; //ok
 
         //manage the file updated to ask for aprovals
         let imageUrlPDF: any;
         let snapshotPDF;
-        if (newData.pdfFileURL) {
-          snapshotPDF = await uploadPdf(
-            newData.pdfFileURL,
-            newData.fechaPostFormato
-          );
 
+        if (newData.pdfFileURL) {
+          snapshotPDF = await uploadPdf(newData.pdfFileURL);
           const imagePathPDF = snapshotPDF?.metadata.fullPath;
           imageUrlPDF = await getDownloadURL(ref(getStorage(), imagePathPDF));
         }
         newData.pdfFileURLFirebase = imageUrlPDF;
+        console.log("2222222");
 
         //Modifying the Service State ServiciosAIT considering the LasEventPost events
-        const RefFirebaseLasEventPostd = doc(db, "Asset", item);
-        const updatedData = {
-          files: arrayUnion(newData),
-        };
 
+        //managing the file
+        const indexToUpdate = newFileListToUpdate.findIndex(
+          (obj: any) => obj.tipoFile === tipoFile
+        );
+        console.log("indexToUpdate", indexToUpdate);
+        console.log(newFileListToUpdate);
+        console.log(newData);
+        console.log("------------");
+
+        // Check if the index is found
+        if (indexToUpdate !== -1) {
+          // // Create a new object to replace the old one
+          // const newObj = {
+          //   FilenameTitle: "NewName",
+          //   autor: 28,
+          //   fechaPost: "NewCity",
+          //   fechaPostFormato: "NewCountry",
+          //   fechaVencimiento: "NewOccupation",
+          //   pdfFileURL: "NewOccupation",
+          //   pdfFileURLFirebase: "NewOccupation",
+          //   tipoFile: "NewOccupation",
+          // };
+
+          // Replace the object at the found index with the new object
+          newFileListToUpdate[indexToUpdate] = newData;
+
+          console.log("Object with age 28 replaced:", newFileListToUpdate);
+        } else {
+          console.log("Object with age 28 not found in the list.");
+        }
+        console.log("3333");
+        console.log(newFileListToUpdate);
+
+        const RefFirebaseLasEventPostd = doc(db, "Asset", uidDoc);
+        const updatedData = {
+          files: newFileListToUpdate,
+        };
         await updateDoc(RefFirebaseLasEventPostd, updatedData);
         router.back();
         Toast.show({
@@ -122,16 +143,10 @@ export default function AddDocs() {
     },
   });
 
-  const uploadPdf = async (uri: any, formattedDate: any) => {
+  const uploadPdf = async (uri: any) => {
     try {
-      console.log("uri111111", uri);
-      console.log("formattedDate11111", formattedDate);
-
       const response = await fetch(uri);
-      // console.log("response", response);
-
       const blob = await response.blob();
-      // const blob = new Blob(response);
 
       const fileSize = blob.size;
 
@@ -148,7 +163,7 @@ export default function AddDocs() {
 
       const storageRef = ref(
         storage,
-        `pdfPost/${shortNameFileUpdated}-${formattedDate}`
+        `pdfPost/${FilenameTitle}-${fechaPostFormato}`
       );
       return await uploadBytesResumable(storageRef, blob);
     } catch (error) {
@@ -161,15 +176,6 @@ export default function AddDocs() {
   };
 
   const selectComponent = (key: string, formikValue?: string) => {
-    if (key === "TipoDocumento") {
-      setRenderComponent(
-        <SelectDocument
-          onClose={onCloseOpenModal}
-          formik={formik}
-          setTipoFile={setTipoFile}
-        />
-      );
-    }
     if (key === "date") {
       setRenderComponent(
         <ChangeDate
@@ -227,27 +233,6 @@ export default function AddDocs() {
             },
           }}
         />
-
-        <Input
-          value={tipoFile}
-          // errorMessage={formik.errors.tipoFile}
-          label="Tipo de Documento Adjunto"
-          multiline={true}
-          editable={false}
-          rightIcon={{
-            type: "material-community",
-            name: "arrow-right-circle-outline",
-            onPress: () => selectComponent("TipoDocumento"),
-          }}
-        />
-        {tipoFile === "Otro" && (
-          <Input
-            label="Nuevo Tipo de Documento Adjunto"
-            // value={formik.values.tipoFile}
-            editable={true}
-            onChangeText={(text) => formik.setFieldValue("tipoFile", text)}
-          />
-        )}
         <Input
           label="Fecha de Vencimiento"
           value={formatdate(formik.values?.fechaVencimiento?.toString())}
@@ -262,7 +247,7 @@ export default function AddDocs() {
         />
       </View>
       <Button
-        title="Agregar Documento"
+        title="Editar Documento"
         buttonStyle={styles.addInformation}
         onPress={() => formik.handleSubmit()}
         loading={formik.isSubmitting}

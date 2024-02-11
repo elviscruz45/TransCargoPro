@@ -1,10 +1,9 @@
 import * as Yup from "yup";
 export function initialValues() {
   return {
-    tipoActivo: "",
-    image: "",
-    //informacion personal
     nombre: "",
+    tipoActivo: "",
+    //informacion personal
     dni: "",
     //informacion activo
     placa: "",
@@ -67,12 +66,17 @@ export function initialValues() {
     nombrePerfil: "",
     companyName: "",
     idFirebaseAsset: "",
+    //user assigned
+    userAssigned: [],
+    files: [],
   };
 }
 
 export function validationSchema() {
   return Yup.object({
-    // NombreServicio: Yup.string().required("Campo obligatorio"),
+    tipoActivo: Yup.string().required("Campo obligatorio"),
+    nombre: Yup.string().required("Campo obligatorio"),
+
     // NumeroAIT: Yup.string().required("Campo obligatorio"),
     // AreaServicio: Yup.string().required("Campo obligatorio"),
     // TipoServicio: Yup.string().required("Campo obligatorio"),
