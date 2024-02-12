@@ -73,19 +73,33 @@ export default function _layout() {
         name="userAssigned"
         options={{
           title: "User List",
-          // presentation: "modal",
-          // headerRight: () => (
-          //   <TouchableOpacity onPress={() => console.log("save")}>
-          //     <Text>Guardar</Text>
-          //   </TouchableOpacity>
-          // ),
-          // headerLeft: () => (
-          //   <TouchableOpacity onPress={() => console.log("cancel")}>
-          //     <Text>Cancelar</Text>
-          //   </TouchableOpacity>
-          // ),
         }}
       />
+      <Stack.Screen
+        name="moreDetail"
+        options={{
+          title: "moreDetail",
+        }}
+      />
+      <Stack.Screen
+        name="files"
+        options={{
+          title: "Files",
+        }}
+      />
+      <Stack.Screen
+        name="editFiles"
+        options={{
+          title: "editFiles",
+        }}
+      />
+      <Stack.Screen
+        name="addFiles"
+        options={{
+          title: "addFiles",
+        }}
+      />
+
       {/*  <Stack.Screen
           name="CameraScreen"
           options={{

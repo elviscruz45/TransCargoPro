@@ -1,45 +1,16 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Text, View, FlatList, TouchableOpacity, Linking } from "react-native";
-import { connect } from "react-redux";
-import { decrement, increment } from "../../../slices/counter";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
 import { Image as ImageExpo } from "expo-image";
-import { Button } from "@rneui/themed";
-// import { Icon } from "@rneui/themed";
 import { styles } from "./index.styles";
-import { assetLists } from "../../../utils/assetList";
-import { postLists } from "../../../utils/postList";
 import { Header } from "../../../components/home/header/header";
-// import {
-//   collection,
-//   onSnapshot,
-//   query,
-//   doc,
-//   updateDoc,
-//   arrayUnion,
-//   arrayRemove,
-//   limit,
-//   where,
-//   orderBy,
-// } from "firebase/firestore";
-// import { LoadingSpinner } from "../../../components/shared/LoadingSpinner/LoadingSpinner";
-// import { useNavigation } from "@react-navigation/native";
-// import { Image as ImageExpo } from "expo-image";
-// import { HeaderScreen } from "../../../components/Home";
-// import { saveTotalEventServiceAITList } from "../../../actions/home";
-// import { areaLists } from "../../../utils/areaList";
-// import { resetPostPerPageHome } from "../../../actions/home";
-// import { saveApprovalListnew } from "../../../actions/search";
-// import { updateAITServicesDATA } from "../../../actions/home";
-// import Toast from "react-native-toast-message";
 
 export default function HomeScreen() {
   const eventList: any = useSelector(
     (state: RootState) => state.home.eventList
   );
   const dispatch = useDispatch();
-  console.log("eventList", eventList);
   return (
     <>
       <View style={styles.container}>
@@ -70,10 +41,12 @@ export default function HomeScreen() {
                         style={styles.roundImage}
                         cachePolicy={"memory-disk"}
                       />
-
-                      <Text style={styles.NombreServicio}>
-                        {item.nombreAsset}
-                      </Text>
+                      <View>
+                        <Text style={styles.NombreServicio}>
+                          {item.nombreAsset}
+                        </Text>
+                        <Text style={styles.NombreServicio}>{item.placa}</Text>
+                      </View>
                     </TouchableOpacity>
 
                     <ImageExpo
@@ -86,6 +59,7 @@ export default function HomeScreen() {
                     </Text>
                   </View>
                 </View>
+
                 <View style={[styles.row, styles.center]}>
                   <Text style={{ marginLeft: 5, color: "#5B5B5B" }}>
                     {"Tipo:  "}

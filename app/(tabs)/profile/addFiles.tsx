@@ -1,12 +1,15 @@
 import { View, Text } from "react-native";
 import React, { useState } from "react";
-import { styles } from "./editFiles.styles";
+import { styles } from "./addFiles.styles";
 import { Input, Button } from "@rneui/themed";
 import * as DocumentPicker from "expo-document-picker";
 import { Modal } from "../../../components/shared/Modal";
+import { ChangeDisplayFileTipo } from "../../../components/search/ChangeFIleTipo/ChangeDisplayFileTipo";
+// import { connect } from "react-redux";
 import { useFormik } from "formik";
-import { initialValues, validationSchema } from "./editFiles.data";
+import { initialValues, validationSchema } from "./addFiles.data";
 import { db } from "../../../utils/firebase";
+import { v4 as uuidv4 } from "uuid";
 import {
   getStorage,
   ref,
@@ -14,6 +17,7 @@ import {
   getDownloadURL,
   uploadBytesResumable,
 } from "firebase/storage";
+
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import Toast from "react-native-toast-message";
 import { useRouter } from "expo-router";
@@ -22,26 +26,31 @@ import type { RootState } from "../../store";
 import { useLocalSearchParams } from "expo-router";
 import { ChangeDate } from "../../../components/publish/forms/ChangeDates/ChangeDate";
 import { formatdate, CurrentFormatDate } from "../../../utils/formats";
+import { SelectDocument } from "../../../components/search/TipoFile/Tipo";
 
-export default function EditDocs() {
+export default function AddDocs() {
   const [renderComponent, setRenderComponent] =
     useState<React.ReactNode | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [shortNameFileUpdated, setShortNameFileUpdated] = useState("");
-
+  const [tipoFile, setTipoFile] = useState("");
   //global state management for the user_uid
-  const { tipoFile, uidDoc, FilenameTitle, fechaPostFormato }: any =
-    useLocalSearchParams();
-  const assetList =
-    useSelector((state: RootState) => state.home.assetList) ?? [];
-  const currentAsset: any = assetList.find(
-    (asset: any) => asset.idFirebaseAsset === uidDoc
+  const { item }: any = useLocalSearchParams();
+
+  const employeesList = useSelector(
+    (state: RootState) => state.profile.employees
   );
-  const files = currentAsset?.files;
+  const currentEmployee: any = employeesList.find(
+    (user: any) => user.uid === item
+  );
+  const files = currentEmployee?.files;
+
+  const tipoFileList = files.map((item: any) => item.tipoFile);
 
   const email = useSelector((state: RootState) => state.userId.email) ?? "";
   // const navigation = useNavigation();
   const router = useRouter();
+
   const onCloseOpenModal = () => setShowModal((prevState) => !prevState);
 
   //using Formik
@@ -51,46 +60,40 @@ export default function EditDocs() {
     validateOnChange: false,
     onSubmit: async (formValue) => {
       try {
-        console.log("111111111");
-        const newFileListToUpdate = [...files];
+        if (tipoFileList.includes(formValue.tipoFile)) {
+          router.back();
+          Toast.show({
+            type: "error",
+            position: "bottom",
+            text1: "Ya esta creado este documento",
+          });
+          return;
+        }
+
         const newData = formValue;
-        newData.fechaPostFormato = CurrentFormatDate(); //ok
-        newData.autor = email; //ok
-        newData.tipoFile = tipoFile; //ok
+        newData.fechaPostFormato = CurrentFormatDate();
+        newData.autor = email;
 
         //manage the file updated to ask for aprovals
         let imageUrlPDF: any;
         let snapshotPDF;
-
         if (newData.pdfFileURL) {
-          snapshotPDF = await uploadPdf(newData.pdfFileURL);
+          snapshotPDF = await uploadPdf(
+            newData.pdfFileURL,
+            newData.fechaPostFormato
+          );
+
           const imagePathPDF = snapshotPDF?.metadata.fullPath;
           imageUrlPDF = await getDownloadURL(ref(getStorage(), imagePathPDF));
         }
         newData.pdfFileURLFirebase = imageUrlPDF;
 
         //Modifying the Service State ServiciosAIT considering the LasEventPost events
-
-        //managing the file
-        const indexToUpdate = newFileListToUpdate.findIndex(
-          (obj: any) => obj.tipoFile === tipoFile
-        );
-        // Check if the index is found
-        if (indexToUpdate !== -1) {
-          // Replace the object at the found index with the new object
-          newFileListToUpdate[indexToUpdate] = newData;
-
-          console.log("Object with age 28 replaced:", newFileListToUpdate);
-        } else {
-          console.log("Object with age 28 not found in the list.");
-        }
-        console.log("3333");
-        console.log(newFileListToUpdate);
-
-        const RefFirebaseLasEventPostd = doc(db, "Asset", uidDoc);
+        const RefFirebaseLasEventPostd = doc(db, "users", item);
         const updatedData = {
-          files: newFileListToUpdate,
+          files: arrayUnion(newData),
         };
+
         await updateDoc(RefFirebaseLasEventPostd, updatedData);
         router.back();
         Toast.show({
@@ -108,11 +111,10 @@ export default function EditDocs() {
     },
   });
 
-  const uploadPdf = async (uri: any) => {
+  const uploadPdf = async (uri: any, formattedDate: any) => {
     try {
       const response = await fetch(uri);
       const blob = await response.blob();
-
       const fileSize = blob.size;
 
       if (fileSize > 25 * 1024 * 1024) {
@@ -128,7 +130,7 @@ export default function EditDocs() {
 
       const storageRef = ref(
         storage,
-        `pdfPost/${FilenameTitle}-${fechaPostFormato}`
+        `pdfPost/${shortNameFileUpdated}-${formattedDate}`
       );
       return await uploadBytesResumable(storageRef, blob);
     } catch (error) {
@@ -141,6 +143,15 @@ export default function EditDocs() {
   };
 
   const selectComponent = (key: string, formikValue?: string) => {
+    if (key === "TipoDocumento") {
+      setRenderComponent(
+        <SelectDocument
+          onClose={onCloseOpenModal}
+          formik={formik}
+          setTipoFile={setTipoFile}
+        />
+      );
+    }
     if (key === "date") {
       setRenderComponent(
         <ChangeDate
@@ -198,6 +209,27 @@ export default function EditDocs() {
             },
           }}
         />
+
+        <Input
+          value={tipoFile}
+          // errorMessage={formik.errors.tipoFile}
+          label="Tipo de Documento Adjunto"
+          multiline={true}
+          editable={false}
+          rightIcon={{
+            type: "material-community",
+            name: "arrow-right-circle-outline",
+            onPress: () => selectComponent("TipoDocumento"),
+          }}
+        />
+        {tipoFile === "Otro" && (
+          <Input
+            label="Nuevo Tipo de Documento Adjunto"
+            // value={formik.values.tipoFile}
+            editable={true}
+            onChangeText={(text) => formik.setFieldValue("tipoFile", text)}
+          />
+        )}
         <Input
           label="Fecha de Vencimiento"
           value={formatdate(formik.values?.fechaVencimiento?.toString())}
@@ -212,7 +244,7 @@ export default function EditDocs() {
         />
       </View>
       <Button
-        title="Editar Documento"
+        title="Agregar Documento"
         buttonStyle={styles.addInformation}
         onPress={() => formik.handleSubmit()}
         loading={formik.isSubmitting}

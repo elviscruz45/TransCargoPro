@@ -15,6 +15,7 @@ export function initialValues() {
     photoEvent: "",
     userType: "",
     photoAssetURL: "",
+    placa: "",
     //Datos Adicionales para Firebase
     fechaPostFormato: "",
     fechaPostISO: new Date().toISOString(),

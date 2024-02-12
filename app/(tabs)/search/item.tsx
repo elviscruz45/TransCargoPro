@@ -22,30 +22,7 @@ import Toast from "react-native-toast-message";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
 import { DateScreen } from "../../../components/search/DateScreen/DateScreen";
-// const formatDate = (item: any) => {
-//   if (item) return;
-//   const date = new Date(item.seconds * 1000);
 
-//   const monthNames = [
-//     "ene.",
-//     "feb.",
-//     "mar.",
-//     "abr.",
-//     "may.",
-//     "jun.",
-//     "jul.",
-//     "ago.",
-//     "sep.",
-//     "oct.",
-//     "nov.",
-//     "dic.",
-//   ];
-//   const day = date.getDate();
-//   const month = monthNames[date.getMonth()];
-//   const year = date.getFullYear();
-//   const formattedDate = `${day} ${month} ${year}`;
-//   return formattedDate;
-// };
 export default function Item(props: any) {
   const { item }: any = useLocalSearchParams();
   const router = useRouter();
@@ -70,16 +47,6 @@ export default function Item(props: any) {
       params: { item: item },
     });
   };
-
-  //   navigation.navigate(screen.search.tab, {
-  //     screen: screen.search.moreDetail,
-  //     params: { Item: data },
-  //   });
-  // };
-  // //Retrieve data Item that comes from the previous screen to render the Updated Status
-  // const {
-  //   params: { item },
-  // } = props;
   //Using navigation.navigate I send it to another screen (post)
   const goToDocs = () => {
     router.push({
@@ -87,11 +54,7 @@ export default function Item(props: any) {
       params: { item: item },
     });
   };
-  //   navigation.navigate(screen.search.tab, {
-  //     screen: screen.search.pdf,
-  //     params: { Item: item },
-  //   });
-  // };
+
   const changeAvatar = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,

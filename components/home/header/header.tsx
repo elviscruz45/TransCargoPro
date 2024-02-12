@@ -19,7 +19,6 @@ export function Header() {
     if (longText?.length > maxLength) {
       shortText = `${longText.substring(0, maxLength)}...`;
     }
-
     return <Text>{shortText}</Text>;
   };
 
@@ -70,7 +69,12 @@ export function Header() {
                     borderRadius: 80,
                   }}
                 />
-                {ShortTextComponent(item.NombreArea ?? item.activo)}
+                <Text style={{ alignSelf: "center" }}>
+                  {ShortTextComponent(item.nombre ?? item.activo)}
+                </Text>
+                <Text style={{ alignSelf: "center" }}>
+                  {ShortTextComponent(item.placa ?? item.activo)}
+                </Text>
               </View>
             </TouchableOpacity>
           );
@@ -79,11 +83,3 @@ export function Header() {
     </View>
   );
 }
-
-//     {/* <EditScreenInfo path="app/(tabs)/index.tsx" /> */}
-//     {/* <Button
-//     // aria-label="Increment value"
-//     title="Increment"
-//     onPress={() => dispatch(increment())}
-//   />
-//   //);

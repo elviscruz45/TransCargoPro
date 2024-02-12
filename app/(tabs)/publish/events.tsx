@@ -143,6 +143,7 @@ export default function events(props: any) {
 
         newData.nombrePerfil = displayName || "Anonimo";
         newData.idFirebaseAsset = currentAsset?.idFirebaseAsset;
+        newData.placa = currentAsset?.placa;
         //Data about the company belong this event
         const regex = /@(.+?)\./i;
         newData.companyName = companyName || "Anonimo";

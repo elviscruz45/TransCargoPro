@@ -105,4 +105,33 @@ export const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "red",
   },
+  name: {
+    fontWeight: "bold",
+    textAlign: "center",
+
+    // marginLeft: windowWidth / 2,
+  },
+  row: {
+    flexDirection: "row",
+  },
+  center: {
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  info: {
+    // color: "#828282",
+    // paddingRight: 100,
+    marginTop: 3,
+    // marginLeft: windowWidth / 32,
+    fontWeight: "600",
+    marginHorizontal: windowWidth * 0.02,
+  },
+  info3: {
+    // color: "#828282",
+    // paddingRight: 10,
+    marginTop: 3,
+    fontWeight: "normal",
+    // marginHorizontal: windowWidth * 0.28,
+    marginRight: 10,
+  },
 });

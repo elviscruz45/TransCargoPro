@@ -32,12 +32,13 @@ export default function EditDocs() {
   //global state management for the user_uid
   const { tipoFile, uidDoc, FilenameTitle, fechaPostFormato }: any =
     useLocalSearchParams();
-  const assetList =
-    useSelector((state: RootState) => state.home.assetList) ?? [];
-  const currentAsset: any = assetList.find(
-    (asset: any) => asset.idFirebaseAsset === uidDoc
+  const employeesList = useSelector(
+    (state: RootState) => state.profile.employees
   );
-  const files = currentAsset?.files;
+  const currentEmployee: any = employeesList.find(
+    (user: any) => user.uid === uidDoc
+  );
+  const files = currentEmployee?.files;
 
   const email = useSelector((state: RootState) => state.userId.email) ?? "";
   // const navigation = useNavigation();

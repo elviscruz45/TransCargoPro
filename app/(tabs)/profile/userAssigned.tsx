@@ -129,10 +129,16 @@ export default function AssetAssigned() {
       }
     };
   }, []);
-
+  //this function goes to another screen to get more detail about the service state
+  const MoreDetail = (item: any) => {
+    router.push({
+      pathname: "/profile/moreDetail",
+      params: { item: item },
+    });
+  };
   return (
     <>
-      <View style={{ backgroundColor: "white" }}>
+      <View style={{ backgroundColor: "white", flex: 1 }}>
         {/* {console.log("SearchItem")} */}
         <FlatList
           data={searchResults}
@@ -149,22 +155,33 @@ export default function AssetAssigned() {
           scrollEnabled={true}
           renderItem={({ item, index }) => {
             return (
-              <View style={{ flexDirection: "row", alignSelf: "center" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignSelf: "center",
+                  backgroundColor: "white",
+                }}
+              >
                 <View
-                  style={[styles.equipments, { alignSelf: "center", flex: 1 }]}
+                  style={[styles.equipments, { alignSelf: "center", flex: 2 }]}
                 >
-                  <ImageExpo
-                    source={
-                      item?.photoURL
-                        ? { uri: item?.photoURL }
-                        : require("../../../assets/assetpics/userIcon.png")
-                    }
-                    style={styles.image}
-                    cachePolicy={"memory-disk"}
-                  />
+                  <TouchableOpacity onPress={() => MoreDetail(item.uid)}>
+                    <ImageExpo
+                      source={
+                        item?.photoURL
+                          ? { uri: item?.photoURL }
+                          : require("../../../assets/assetpics/userIcon.png")
+                      }
+                      style={styles.image}
+                      cachePolicy={"memory-disk"}
+                    />
+                  </TouchableOpacity>
+
                   <View>
                     {item.displayNameform && (
-                      <Text style={styles.info}>{item.displayNameform}</Text>
+                      <Text style={[styles.info, { alignSelf: "center" }]}>
+                        {item.displayNameform}
+                      </Text>
                     )}
                     {item.email && (
                       <Text style={styles.info}>{item.email}</Text>
